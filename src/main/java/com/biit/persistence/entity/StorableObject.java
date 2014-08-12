@@ -37,8 +37,8 @@ public abstract class StorableObject {
 	private Long updatedBy = null;
 
 	// A unique Id created with the object used to compare persisted objects and in memory objects.
-	//MySQL unique keys are limited to 767 bytes that in utf8mb4 are ~190. 
-	@Column(unique = true, nullable = false, updatable = false, length=190)
+	// MySQL unique keys are limited to 767 bytes that in utf8mb4 are ~190.
+	@Column(unique = true, nullable = false, updatable = false, length = 190)
 	private String comparationId;
 
 	public StorableObject() {
@@ -139,6 +139,10 @@ public abstract class StorableObject {
 
 	public void resetIds() {
 		setId(null);
+	}
+
+	public synchronized String getComparationId() {
+		return comparationId;
 	}
 
 }
