@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
+import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.biit.persistence.dao.IGenericDao;
@@ -130,8 +131,14 @@ public abstract class GenericDao<T> extends StorableObjectDao<T> implements IGen
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
+			// session.createCriteria(getType()).list() is not working returns repeated elements due to
+			// http://stackoverflow.com/questions/8758363/why-session-createcriteriaclasstype-list-return-more-object-than-in-list
+			// if we have a list with eager fetch.
+			Criteria criteria = session.createCriteria(getType());
+			// This is executed in java side.
+			criteria.setResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
 			@SuppressWarnings("unchecked")
-			List<T> objects = session.createCriteria(getType()).list();
+			List<T> objects = criteria.list();
 			initializeSets(objects);
 			session.getTransaction().commit();
 			return objects;
