@@ -15,7 +15,7 @@ import com.biit.persistence.utils.IdGenerator;
 import com.liferay.portal.model.User;
 
 @Entity
-@Table(name = "STORABLE_OBJECTS")
+@Table(name = "storable_objects")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class StorableObject {
 
@@ -90,16 +90,16 @@ public abstract class StorableObject {
 
 	public void setCreatedBy(User user) {
 		if (user != null) {
-			this.createdBy = user.getUserId();
+			createdBy = user.getUserId();
 		}
 	}
 
 	public void setCreationTime(Timestamp dateCreated) {
-		this.creationTime = dateCreated;
+		creationTime = dateCreated;
 	}
 
 	public void setUpdateTime(Timestamp dateUpdated) {
-		this.updateTime = dateUpdated;
+		updateTime = dateUpdated;
 	}
 
 	public void setUpdatedBy(Long updatedBy) {
@@ -108,7 +108,7 @@ public abstract class StorableObject {
 
 	public void setUpdatedBy(User user) {
 		if (user != null) {
-			this.updatedBy = user.getUserId();
+			updatedBy = user.getUserId();
 		}
 	}
 
@@ -116,24 +116,29 @@ public abstract class StorableObject {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((comparationId == null) ? 0 : comparationId.hashCode());
+		result = (prime * result) + ((comparationId == null) ? 0 : comparationId.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		StorableObject other = (StorableObject) obj;
 		if (comparationId == null) {
-			if (other.comparationId != null)
+			if (other.comparationId != null) {
 				return false;
-		} else if (!comparationId.equals(other.comparationId))
+			}
+		} else if (!comparationId.equals(other.comparationId)) {
 			return false;
+		}
 		return true;
 	}
 
