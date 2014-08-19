@@ -19,10 +19,14 @@ import com.liferay.portal.model.User;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class StorableObject {
 
-	// GenerationType.Table stores into hibernate_sequence the name of the table as a VARCHAR(255) when using
-	// "hibernate.id.new_generator_mappings" property. If using utf8mb4, the VARCHAR(255) needs 1000 bytes, that this is
-	// forbidden due to MySQL only allows a max of 767 bytes in a unique key. If "hibernate.id.new_generator_mappings"
-	// is not set, GenerationType.AUTO causes Cannot use identity column key generation with <union-subclass> error.
+	// GenerationType.Table stores into hibernate_sequence the name of the table
+	// as a VARCHAR(255) when using
+	// "hibernate.id.new_generator_mappings" property. If using utf8mb4, the
+	// VARCHAR(255) needs 1000 bytes, that this is
+	// forbidden due to MySQL only allows a max of 767 bytes in a unique key. If
+	// "hibernate.id.new_generator_mappings"
+	// is not set, GenerationType.AUTO causes Cannot use identity column key
+	// generation with <union-subclass> error.
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ID", unique = true, nullable = false)
@@ -36,7 +40,8 @@ public abstract class StorableObject {
 	@Column(columnDefinition = "DOUBLE")
 	private Long updatedBy = null;
 
-	// A unique Id created with the object used to compare persisted objects and in memory objects.
+	// A unique Id created with the object used to compare persisted objects and
+	// in memory objects.
 	// MySQL unique keys are limited to 767 bytes that in utf8mb4 are ~190.
 	@Column(unique = true, nullable = false, updatable = false, length = 190)
 	private String comparationId;
@@ -148,6 +153,17 @@ public abstract class StorableObject {
 
 	public synchronized String getComparationId() {
 		return comparationId;
+	}
+
+	/**
+	 * Needed for the drools engine <br>
+	 * The identifiers in drools can't contain dashes so they are eliminated
+	 * before returning the string
+	 *
+	 * @return
+	 */
+	public synchronized String getComparationIdNoDash() {
+		return comparationId.replaceAll("-", "");
 	}
 
 }
