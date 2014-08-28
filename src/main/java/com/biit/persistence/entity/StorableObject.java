@@ -18,6 +18,7 @@ import com.liferay.portal.model.User;
 @Table(name = "storable_objects")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class StorableObject {
+	protected final static int MAX_UNIQUE_COLUMN_LENGTH = 190;
 
 	// GenerationType.Table stores into hibernate_sequence the name of the table
 	// as a VARCHAR(255) when using
@@ -43,7 +44,7 @@ public abstract class StorableObject {
 	// A unique Id created with the object used to compare persisted objects and
 	// in memory objects.
 	// MySQL unique keys are limited to 767 bytes that in utf8mb4 are ~190.
-	@Column(unique = true, nullable = false, updatable = false, length = 190)
+	@Column(unique = true, nullable = false, updatable = false, length = MAX_UNIQUE_COLUMN_LENGTH)
 	private String comparationId;
 
 	public StorableObject() {
@@ -157,9 +158,8 @@ public abstract class StorableObject {
 
 	/**
 	 * Needed for the drools engine <br>
-	 * The identifiers in drools can't contain dashes so they are eliminated
-	 * before returning the string
-	 *
+	 * The identifiers in drools can't contain dashes so they are eliminated before returning the string
+	 * 
 	 * @return
 	 */
 	public synchronized String getComparationIdNoDash() {
