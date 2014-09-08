@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 import com.biit.persistence.utils.IdGenerator;
@@ -14,6 +16,7 @@ import com.liferay.portal.model.User;
 
 @Entity
 @Table(name = "storable_objects")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class StorableObject {
 	protected final static int MAX_UNIQUE_COLUMN_LENGTH = 190;
 

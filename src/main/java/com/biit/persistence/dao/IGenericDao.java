@@ -32,7 +32,7 @@ public interface IGenericDao<T> {
 	 * 
 	 * @return
 	 */
-	int getRowCount();
+	Long getRowCount();
 
 	/**
 	 * Gets one element by id.
