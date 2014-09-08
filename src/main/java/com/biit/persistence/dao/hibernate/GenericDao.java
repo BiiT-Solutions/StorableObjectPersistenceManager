@@ -7,21 +7,18 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Projections;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.biit.persistence.dao.IGenericDao;
+import com.biit.persistence.entity.StorableObject;
 
-public abstract class GenericDao<T> extends StorableObjectDao<T> implements IGenericDao<T> {
+public abstract class GenericDao<T extends StorableObject> extends StorableObjectDao<T> implements IGenericDao<T> {
 	// Recomended values are [15-25]. Bigger values reduce database access but increase CPU consumption.
 	private final static int MAX_OBJETS_PER_SESSION = 25;
 
 	private Class<T> type;
 
-	@Autowired
+	@PersistenceContext
 	private EntityManager entityManager = null;
 
 	public GenericDao(Class<T> type) {
@@ -34,7 +31,7 @@ public abstract class GenericDao<T> extends StorableObjectDao<T> implements IGen
 	}
 
 	protected Session getSession() {
-		Session session = entityManager.unwrap(Session.class);
+		Session session = getEntityManager().unwrap(Session.class);
 		return session;
 	}
 
@@ -42,47 +39,51 @@ public abstract class GenericDao<T> extends StorableObjectDao<T> implements IGen
 		return entityManager;
 	}
 
-	@PersistenceContext
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 
-	@Transactional
+	@Override
 	public T makePersistent(T entity) {
 		setCreationInfo(entity);
 		setUpdateInfo(entity);
-		entityManager.persist(entity);
-		return entity;
-	}
-
-	@Override
-	public void makeTransient(T entity) {
-		entityManager.remove(entity);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public T read(Long id) {
-		if (id == null) {
-			return null;
+		if (((StorableObject) entity).getId() == null) {
+			getEntityManager().persist(entity);
+			return entity;
 		} else {
-			return entityManager.find(type, id);
+			return getEntityManager().merge(entity);
 		}
 	}
 
 	@Override
-	public Long getRowCount() {
-		CriteriaBuilder qb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Long> cq = qb.createQuery(Long.class);
-		cq.select(qb.count(cq.from(getType())));
-		cq.where(/* your stuff */);
-		return entityManager.createQuery(cq).getSingleResult();
+	public void makeTransient(T entity) {
+		getEntityManager().remove(entity);
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
+	public T read(Long id) {
+		if (id == null) {
+			return null;
+		} else {
+			return getEntityManager().find(getType(), id);
+		}
+	}
+
+	@Override
+	public int getRowCount() {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+		criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(getType())));
+		return entityManager.createQuery(criteriaQuery).getSingleResult().intValue();
+	}
+
 	@Override
 	public List<T> getAll() {
-		return entityManager.createQuery("select o from " + type.getName() + " o").getResultList();
+		CriteriaQuery<T> criteria = getEntityManager().getCriteriaBuilder().createQuery(getType());
+		criteria.select(criteria.from(getType()));
+		List<T> ListOfEmailDomains = getEntityManager().createQuery(criteria).getResultList();
+		return ListOfEmailDomains;
+
 	}
 
 	/**

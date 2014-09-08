@@ -2,7 +2,9 @@ package com.biit.persistence.dao;
 
 import java.util.List;
 
-public interface IGenericDao<T> {
+import com.biit.persistence.entity.StorableObject;
+
+public interface IGenericDao<T extends StorableObject> {
 
 	/**
 	 * Get all elements stored into the database.
@@ -32,7 +34,7 @@ public interface IGenericDao<T> {
 	 * 
 	 * @return
 	 */
-	Long getRowCount();
+	int getRowCount();
 
 	/**
 	 * Gets one element by id.
@@ -48,12 +50,4 @@ public interface IGenericDao<T> {
 	 * @return
 	 */
 	void removeAll();
-
-	/**
-	 * Store a list of elements into the database. Is quicker than stored each element one by one.
-	 * 
-	 * @param entities
-	 * @return
-	 */
-	List<T> makePersistent(List<T> entities);
 }
