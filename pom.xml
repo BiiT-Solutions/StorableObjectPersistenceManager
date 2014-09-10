@@ -6,7 +6,7 @@
 	<groupId>com.biit</groupId>
 	<artifactId>storableobject-persistence-manager</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1.3</version>
+	<version>0.1.4</version>
 	<name>Liferay Based Generic Persistence Manager</name>
 	<description>Basic functionality for persisting projects based on Liferay Users</description>
 

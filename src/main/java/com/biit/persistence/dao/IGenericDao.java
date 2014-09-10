@@ -2,7 +2,11 @@ package com.biit.persistence.dao;
 
 import java.util.List;
 
-public interface IGenericDao<T> {
+import org.springframework.transaction.annotation.Transactional;
+
+import com.biit.persistence.entity.StorableObject;
+
+public interface IGenericDao<T extends StorableObject> {
 
 	/**
 	 * Get all elements stored into the database.
@@ -17,6 +21,7 @@ public interface IGenericDao<T> {
 	 * @param planningEvent
 	 * @return
 	 */
+	@Transactional
 	T makePersistent(T entity);
 
 	/**
@@ -25,6 +30,7 @@ public interface IGenericDao<T> {
 	 * 
 	 * @param planningEvent
 	 */
+	@Transactional
 	void makeTransient(T entity);
 
 	/**
@@ -47,13 +53,6 @@ public interface IGenericDao<T> {
 	 * 
 	 * @return
 	 */
+	@Transactional
 	void removeAll();
-
-	/**
-	 * Store a list of elements into the database. Is quicker than stored each element one by one.
-	 * 
-	 * @param entities
-	 * @return
-	 */
-	List<T> makePersistent(List<T> entities);
 }

@@ -16,7 +16,7 @@ import com.liferay.portal.model.User;
 
 @Entity
 @Table(name = "storable_objects")
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class StorableObject {
 	protected final static int MAX_UNIQUE_COLUMN_LENGTH = 190;
 
