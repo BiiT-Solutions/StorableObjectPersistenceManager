@@ -114,11 +114,15 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	 * 
 	 * @throws TransactionRequiredException
 	 */
-	void checkTransactionNeeded() throws TransactionRequiredException {
+	protected void checkTransactionNeeded() throws TransactionRequiredException {
 		EntityManagerHolder emHolder = (EntityManagerHolder) TransactionSynchronizationManager
 				.getResource(entityManagerFactory);
 		if (emHolder == null) {
 			throw new TransactionRequiredException("no transaction is in progress");
 		}
+	}
+	
+	protected boolean isManaged(T entity){
+		return getEntityManager().contains(entity);
 	}
 }
