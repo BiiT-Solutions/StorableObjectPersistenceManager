@@ -1,19 +1,14 @@
 package com.biit.persistence.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.transaction.TransactionRequiredException;
-
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.EntityManagerHolder;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.biit.persistence.dao.IGenericDao;
 import com.biit.persistence.entity.StorableObject;
@@ -24,11 +19,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 
 	private Class<T> type;
 
-	@PersistenceContext
-	private EntityManager entityManager = null;
-
 	@Autowired
-	private EntityManagerFactory entityManagerFactory;
+	private SessionFactory sessionFactory = null;
 
 	public GenericDao(Class<T> type) {
 		super();
@@ -39,63 +31,119 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 		return type;
 	}
 
-	protected Session getSession() {
-		Session session = getEntityManager().unwrap(Session.class);
-		return session;
-	}
-
-	protected EntityManager getEntityManager() {
-		return entityManager;
-	}
-
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
+	protected SessionFactory getSessionFactory() {
+		return sessionFactory;
 	}
 
 	@Override
-	@Transactional
 	public T makePersistent(T entity) {
 		setCreationInfo(entity);
 		setUpdateInfo(entity);
-		if (((StorableObject) entity).getId() == null) {
-			getEntityManager().persist(entity);
+		Session session = getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		try {
+			session.saveOrUpdate(entity);
+			session.flush();
+			session.getTransaction().commit();
 			return entity;
-		} else {
-			T entityPersisted = getEntityManager().merge(entity);
-			return entityPersisted;
+		} catch (RuntimeException e) {
+			session.getTransaction().rollback();
+			throw e;
 		}
 	}
 
 	@Override
-	@Transactional
+	public List<T> makePersistent(List<T> entities) {
+		Session session = getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		int objectsToStore = 0;
+		try {
+			for (int i = 0; i < entities.size(); i++) {
+				setCreationInfo(entities.get(i));
+				setUpdateInfo(entities.get(i));
+				session.saveOrUpdate(entities.get(i));
+				objectsToStore++;
+
+				if (objectsToStore > MAX_OBJETS_PER_SESSION || i == entities.size() - 1) {
+					session.flush();
+					session.clear();
+					objectsToStore = 0;
+				}
+			}
+			session.getTransaction().commit();
+			return entities;
+		} catch (RuntimeException e) {
+			session.getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	@Override
 	public void makeTransient(T entity) {
-		getEntityManager().remove(entity);
+		Session session = getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		try {
+			session.delete(entity);
+			session.flush();
+			session.getTransaction().commit();
+		} catch (RuntimeException e) {
+			session.getTransaction().rollback();
+			throw e;
+		}
 	}
 
 	@Override
 	public T read(Long id) {
-		if (id == null) {
-			return null;
-		} else {
-			return getEntityManager().find(getType(), id);
+		Session session = getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		try {
+			@SuppressWarnings("unchecked")
+			T object = (T) session.get(getType(), id);
+			initializeSet(object);
+			session.getTransaction().commit();
+			return object;
+		} catch (RuntimeException e) {
+			session.getTransaction().rollback();
+			throw e;
 		}
 	}
 
 	@Override
 	public int getRowCount() {
-		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-		criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(getType())));
-		return entityManager.createQuery(criteriaQuery).getSingleResult().intValue();
+		Session session = getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		try {
+			Criteria criteria = session.createCriteria(getType());
+			criteria.setProjection(Projections.rowCount());
+			int rows = ((Long) criteria.uniqueResult()).intValue();
+			session.getTransaction().commit();
+			return rows;
+		} catch (RuntimeException e) {
+			session.getTransaction().rollback();
+			throw e;
+		}
 	}
 
 	@Override
 	public List<T> getAll() {
-		CriteriaQuery<T> criteria = getEntityManager().getCriteriaBuilder().createQuery(getType());
-		criteria.select(criteria.from(getType()));
-		List<T> ListOfEmailDomains = getEntityManager().createQuery(criteria).getResultList();
-		return ListOfEmailDomains;
-
+		Session session = getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		try {
+			// session.createCriteria(getType()).list() is not working returns repeated elements due to
+			// http://stackoverflow.com/questions/8758363/why-session-createcriteriaclasstype-list-return-more-object-than-in-list
+			// if we have a list with eager fetch.
+			Criteria criteria = session.createCriteria(getType());
+			// This is executed in java side.
+			criteria.setResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
+			@SuppressWarnings("unchecked")
+			List<T> objects = criteria.list();
+			initializeSets(objects);
+			session.getTransaction().commit();
+			return objects;
+		} catch (RuntimeException e) {
+			session.getTransaction().rollback();
+			throw e;
+		}
 	}
 
 	/**
@@ -110,19 +158,24 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	}
 
 	/**
-	 * Checks if a transaction has been correctly configured or not.
+	 * When using lazy loading, the sets must have a proxy to avoid a
+	 * "LazyInitializationException: failed to lazily initialize a collection of..." error. This procedure must be
+	 * called before closing the session.
 	 * 
-	 * @throws TransactionRequiredException
+	 * @param planningEvent
 	 */
-	protected void checkTransactionNeeded() throws TransactionRequiredException {
-		EntityManagerHolder emHolder = (EntityManagerHolder) TransactionSynchronizationManager
-				.getResource(entityManagerFactory);
-		if (emHolder == null) {
-			throw new TransactionRequiredException("no transaction is in progress");
-		}
+	private void initializeSet(T element) {
+		List<T> elements = new ArrayList<>();
+		elements.add(element);
+		initializeSets(elements);
 	}
-	
-	protected boolean isManaged(T entity){
-		return getEntityManager().contains(entity);
-	}
+
+	/**
+	 * When using lazy loading, the sets must have a proxy to avoid a
+	 * "LazyInitializationException: failed to lazily initialize a collection of..." error. This procedure must be
+	 * called before closing the session.
+	 * 
+	 * @param elements
+	 */
+	protected abstract void initializeSets(List<T> elements);
 }

@@ -55,4 +55,6 @@ public interface IGenericDao<T extends StorableObject> {
 	 */
 	@Transactional
 	void removeAll();
+
+	List<T> makePersistent(List<T> entities);
 }
