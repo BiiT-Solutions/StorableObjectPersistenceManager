@@ -2,8 +2,6 @@ package com.biit.persistence.dao;
 
 import java.util.List;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import com.biit.persistence.entity.StorableObject;
 
 public interface IGenericDao<T extends StorableObject> {
@@ -21,7 +19,6 @@ public interface IGenericDao<T extends StorableObject> {
 	 * @param planningEvent
 	 * @return
 	 */
-	@Transactional
 	T makePersistent(T entity);
 
 	/**
@@ -30,7 +27,6 @@ public interface IGenericDao<T extends StorableObject> {
 	 * 
 	 * @param planningEvent
 	 */
-	@Transactional
 	void makeTransient(T entity);
 
 	/**
@@ -53,8 +49,13 @@ public interface IGenericDao<T extends StorableObject> {
 	 * 
 	 * @return
 	 */
-	@Transactional
 	void removeAll();
 
+	/**
+	 * Persists a list of objects.
+	 * 
+	 * @param entities
+	 * @return
+	 */
 	List<T> makePersistent(List<T> entities);
 }

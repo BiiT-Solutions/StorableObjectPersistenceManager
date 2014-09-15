@@ -162,7 +162,7 @@ public abstract class StorableObject {
 	 * 
 	 * @return
 	 */
-	public synchronized String getComparationIdNoDash() {
+	public synchronized String getUniqueNameReadable() {
 		return comparationId.replaceAll("-", "");
 	}
 

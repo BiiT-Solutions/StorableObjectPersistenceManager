@@ -23,7 +23,6 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	private SessionFactory sessionFactory = null;
 
 	public GenericDao(Class<T> type) {
-		super();
 		this.type = type;
 	}
 
@@ -33,6 +32,10 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 
 	protected SessionFactory getSessionFactory() {
 		return sessionFactory;
+	}
+
+	protected void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 
 	@Override
