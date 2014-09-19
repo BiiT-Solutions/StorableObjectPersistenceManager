@@ -64,6 +64,10 @@ public abstract class StorableObject {
 	public Long getCreatedBy() {
 		return createdBy;
 	}
+	
+	public void setCreationTime(){
+		setCreationTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+	}
 
 	public Timestamp getCreationTime() {
 		if (creationTime != null) {
