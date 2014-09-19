@@ -150,6 +150,11 @@ public abstract class StorableObject {
 
 	public void resetIds() {
 		setId(null);
+		comparationId = IdGenerator.createId();
+	}
+
+	protected synchronized void setComparationId(String comparationId) {
+		this.comparationId = comparationId;
 	}
 
 	public synchronized String getComparationId() {
@@ -158,7 +163,8 @@ public abstract class StorableObject {
 
 	/**
 	 * Needed for the drools engine <br>
-	 * The identifiers in drools can't contain dashes so they are eliminated before returning the string
+	 * The identifiers in drools can't contain dashes so they are eliminated
+	 * before returning the string
 	 * 
 	 * @return
 	 */
