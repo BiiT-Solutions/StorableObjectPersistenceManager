@@ -1,7 +1,9 @@
 package com.biit.persistence.dao.hibernate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -38,10 +40,57 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 		this.sessionFactory = sessionFactory;
 	}
 
+	/**
+	 * Get all elements that has a null value in the ID parameter before persisting.
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public Set<StorableObject> getElementsWithNullIds(T entity) {
+		Set<StorableObject> elementsWithNullIds = new HashSet<>();
+		if (entity.getId() == null) {
+			elementsWithNullIds.add(entity);
+		}
+		for (StorableObject child : entity.getAllInnerStorableObjects()) {
+			if (child.getId() == null) {
+				elementsWithNullIds.add(child);
+			}
+		}
+		return elementsWithNullIds;
+	}
+
+	/**
+	 * Get all elements that has a null value in the ID parameter before persisting.
+	 * 
+	 * @param entities
+	 * @return
+	 */
+	public Set<StorableObject> getElementsWithNullIds(Set<StorableObject> entities) {
+		Set<StorableObject> elementsWithNullIds = new HashSet<>();
+		for (StorableObject entity : entities) {
+			if (entity.getId() == null) {
+				elementsWithNullIds.add(entity);
+			}
+		}
+		return elementsWithNullIds;
+	}
+
+	/**
+	 * Rest the Ids of this elements.
+	 * 
+	 * @param elementsThatMustHaveNullId
+	 */
+	public void setNullIds(Set<StorableObject> elementsThatMustHaveNullId) {
+		for (StorableObject element : elementsThatMustHaveNullId) {
+			element.setId(null);
+		}
+	}
+
 	@Override
 	public T makePersistent(T entity) {
 		setCreationInfo(entity);
 		setUpdateInfo(entity);
+		Set<StorableObject> elementsWithNullIds = getElementsWithNullIds(entity);
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
@@ -51,6 +100,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			return entity;
 		} catch (RuntimeException e) {
 			session.getTransaction().rollback();
+			// Reset the IDs if hibernate has put a value before rollback.
+			setNullIds(elementsWithNullIds);
 			throw e;
 		}
 	}

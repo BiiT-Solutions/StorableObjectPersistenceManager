@@ -1,6 +1,7 @@
 package com.biit.persistence.entity;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -152,8 +153,12 @@ public abstract class StorableObject {
 		setId(null);
 	}
 
-	public synchronized String getComparationId() {
+	public String getComparationId() {
 		return comparationId;
+	}
+
+	public void setComparationId(String comparationId) {
+		this.comparationId = comparationId;
 	}
 
 	/**
@@ -165,5 +170,12 @@ public abstract class StorableObject {
 	public synchronized String getUniqueNameReadable() {
 		return comparationId.replaceAll("-", "");
 	}
+
+	/**
+	 * Return all inner elements that compose this object.
+	 * 
+	 * @return
+	 */
+	public abstract Set<StorableObject> getAllInnerStorableObjects();
 
 }
