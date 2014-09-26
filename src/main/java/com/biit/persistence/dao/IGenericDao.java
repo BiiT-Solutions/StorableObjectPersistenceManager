@@ -61,5 +61,9 @@ public interface IGenericDao<T extends StorableObject> {
 	 */
 	List<T> makePersistent(List<T> entities);
 
+	/**
+	 * Gets current sessionFactory. 
+	 * @return
+	 */
 	SessionFactory getSessionFactory();
 }
