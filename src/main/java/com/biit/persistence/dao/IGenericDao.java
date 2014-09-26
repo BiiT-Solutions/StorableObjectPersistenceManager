@@ -2,6 +2,8 @@ package com.biit.persistence.dao;
 
 import java.util.List;
 
+import org.hibernate.SessionFactory;
+
 import com.biit.persistence.entity.StorableObject;
 
 public interface IGenericDao<T extends StorableObject> {
@@ -58,4 +60,6 @@ public interface IGenericDao<T extends StorableObject> {
 	 * @return
 	 */
 	List<T> makePersistent(List<T> entities);
+
+	SessionFactory getSessionFactory();
 }

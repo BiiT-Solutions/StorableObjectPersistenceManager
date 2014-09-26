@@ -32,7 +32,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 		return type;
 	}
 
-	protected SessionFactory getSessionFactory() {
+	@Override
+	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
@@ -219,9 +220,11 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	 * @param planningEvent
 	 */
 	private void initializeSet(T element) {
-		List<T> elements = new ArrayList<>();
-		elements.add(element);
-		initializeSets(elements);
+		if (element != null) {
+			List<T> elements = new ArrayList<>();
+			elements.add(element);
+			initializeSets(elements);
+		}
 	}
 
 	/**
