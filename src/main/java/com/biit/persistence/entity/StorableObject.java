@@ -157,6 +157,9 @@ public abstract class StorableObject {
 	public void resetIds() {
 		setId(null);
 		comparationId = IdGenerator.createId();
+		// for (StorableObject child : getAllInnerStorableObjects()) {
+		// child.resetIds();
+		// }
 	}
 
 	/**
