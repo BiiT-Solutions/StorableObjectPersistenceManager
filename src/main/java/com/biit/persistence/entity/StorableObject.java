@@ -12,6 +12,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
+import com.biit.persistence.entity.exceptions.NotValidStorableObjectException;
 import com.biit.persistence.utils.IdGenerator;
 import com.liferay.portal.model.User;
 
@@ -64,8 +65,8 @@ public abstract class StorableObject {
 	public Long getCreatedBy() {
 		return createdBy;
 	}
-	
-	public void setCreationTime(){
+
+	public void setCreationTime() {
 		setCreationTime(new java.sql.Timestamp(new java.util.Date().getTime()));
 	}
 
@@ -187,5 +188,21 @@ public abstract class StorableObject {
 	 * @return
 	 */
 	public abstract Set<StorableObject> getAllInnerStorableObjects();
+
+	/**
+	 * Function to copy internal data of each different class that inherits treeObject.
+	 * 
+	 * @param object
+	 */
+	protected abstract void copyData(StorableObject object) throws NotValidStorableObjectException;
+
+	protected final void copyCreationInfo(StorableObject object) {
+		setCreatedBy(object.getCreatedBy());
+		setUpdatedBy(object.getUpdatedBy());
+		setId(object.getId());
+		setComparationId(object.getComparationId());
+		setCreationTime(object.getCreationTime());
+		setUpdateTime(object.getUpdateTime());
+	}
 
 }
