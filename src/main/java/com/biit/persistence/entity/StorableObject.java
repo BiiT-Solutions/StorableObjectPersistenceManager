@@ -194,7 +194,7 @@ public abstract class StorableObject {
 	 * 
 	 * @param object
 	 */
-	protected abstract void copyData(StorableObject object) throws NotValidStorableObjectException;
+	public abstract void copyData(StorableObject object) throws NotValidStorableObjectException;
 
 	protected void copyBasicInfo(StorableObject object) throws NotValidStorableObjectException {
 		setCreatedBy(object.getCreatedBy());
