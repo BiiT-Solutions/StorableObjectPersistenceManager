@@ -196,7 +196,7 @@ public abstract class StorableObject {
 	 */
 	protected abstract void copyData(StorableObject object) throws NotValidStorableObjectException;
 
-	protected final void copyCreationInfo(StorableObject object) {
+	protected void copyBasicInfo(StorableObject object) throws NotValidStorableObjectException {
 		setCreatedBy(object.getCreatedBy());
 		setUpdatedBy(object.getUpdatedBy());
 		setId(object.getId());
