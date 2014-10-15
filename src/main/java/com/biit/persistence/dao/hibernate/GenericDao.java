@@ -10,7 +10,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.biit.persistence.dao.IGenericDao;
 import com.biit.persistence.entity.StorableObject;
@@ -21,7 +20,6 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 
 	private Class<T> type;
 
-	@Autowired
 	private SessionFactory sessionFactory = null;
 
 	public GenericDao(Class<T> type) {
@@ -37,7 +35,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 		return sessionFactory;
 	}
 
-	protected void setSessionFactory(SessionFactory sessionFactory) {
+	@Override
+	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 

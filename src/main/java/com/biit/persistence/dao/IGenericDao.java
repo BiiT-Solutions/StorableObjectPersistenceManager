@@ -66,4 +66,6 @@ public interface IGenericDao<T extends StorableObject> {
 	 * @return
 	 */
 	SessionFactory getSessionFactory();
+
+	void setSessionFactory(SessionFactory sessionFactory);
 }
