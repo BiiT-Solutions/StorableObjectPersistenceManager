@@ -68,4 +68,9 @@ public interface IGenericDao<T extends StorableObject> {
 	SessionFactory getSessionFactory();
 
 	void setSessionFactory(SessionFactory sessionFactory);
+
+	/**
+	 * Clear the entire 2nd level cache. 
+	 */
+	void evictAllCache();
 }

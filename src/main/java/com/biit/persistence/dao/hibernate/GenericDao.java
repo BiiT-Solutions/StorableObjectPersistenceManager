@@ -234,4 +234,16 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	 * @param elements
 	 */
 	protected abstract void initializeSets(List<T> elements);
+
+	@Override
+	public void evictAllCache() {
+		if (getSessionFactory() != null && getSessionFactory().getCache() != null) {
+			// getSessionFactory().getCache().evictAllRegions();
+			getSessionFactory().getCache().evictCollectionRegions();
+			getSessionFactory().getCache().evictDefaultQueryRegion();
+			getSessionFactory().getCache().evictEntityRegions();
+			getSessionFactory().getCache().evictQueryRegions();
+			getSessionFactory().getCache().evictNaturalIdRegions();
+		}
+	}
 }
