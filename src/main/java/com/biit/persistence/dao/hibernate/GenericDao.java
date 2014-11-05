@@ -15,7 +15,8 @@ import com.biit.persistence.dao.IGenericDao;
 import com.biit.persistence.entity.StorableObject;
 
 public abstract class GenericDao<T extends StorableObject> extends StorableObjectDao<T> implements IGenericDao<T> {
-	// Recommended values are [15-25]. Bigger values reduce database access but increase CPU consumption.
+	// Recommended values are [15-25]. Bigger values reduce database access but
+	// increase CPU consumption.
 	private final static int MAX_OBJETS_PER_SESSION = 25;
 
 	private Class<T> type;
@@ -41,7 +42,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	}
 
 	/**
-	 * Get all elements that has a null value in the ID parameter before persisting.
+	 * Get all elements that has a null value in the ID parameter before
+	 * persisting.
 	 * 
 	 * @param entity
 	 * @return
@@ -51,16 +53,19 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 		if (entity.getId() == null) {
 			elementsWithNullIds.add(entity);
 		}
-		for (StorableObject child : entity.getAllInnerStorableObjects()) {
-			if (child.getId() == null) {
-				elementsWithNullIds.add(child);
+		if (entity.getAllInnerStorableObjects() != null) {
+			for (StorableObject child : entity.getAllInnerStorableObjects()) {
+				if (child.getId() == null) {
+					elementsWithNullIds.add(child);
+				}
 			}
 		}
 		return elementsWithNullIds;
 	}
 
 	/**
-	 * Get all elements that has a null value in the ID parameter before persisting.
+	 * Get all elements that has a null value in the ID parameter before
+	 * persisting.
 	 * 
 	 * @param entities
 	 * @return
@@ -183,7 +188,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
-			// session.createCriteria(getType()).list() is not working returns repeated elements due to
+			// session.createCriteria(getType()).list() is not working returns
+			// repeated elements due to
 			// http://stackoverflow.com/questions/8758363/why-session-createcriteriaclasstype-list-return-more-object-than-in-list
 			// if we have a list with eager fetch.
 			Criteria criteria = session.createCriteria(getType());
@@ -213,8 +219,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 
 	/**
 	 * When using lazy loading, the sets must have a proxy to avoid a
-	 * "LazyInitializationException: failed to lazily initialize a collection of..." error. This procedure must be
-	 * called before closing the session.
+	 * "LazyInitializationException: failed to lazily initialize a collection of..."
+	 * error. This procedure must be called before closing the session.
 	 * 
 	 * @param planningEvent
 	 */
@@ -228,8 +234,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 
 	/**
 	 * When using lazy loading, the sets must have a proxy to avoid a
-	 * "LazyInitializationException: failed to lazily initialize a collection of..." error. This procedure must be
-	 * called before closing the session.
+	 * "LazyInitializationException: failed to lazily initialize a collection of..."
+	 * error. This procedure must be called before closing the session.
 	 * 
 	 * @param elements
 	 */
