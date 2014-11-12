@@ -12,6 +12,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
 
 import com.biit.persistence.dao.IGenericDao;
+import com.biit.persistence.dao.exceptions.UnexpectedDatabaseException;
 import com.biit.persistence.entity.StorableObject;
 
 public abstract class GenericDao<T extends StorableObject> extends StorableObjectDao<T> implements IGenericDao<T> {
@@ -42,8 +43,7 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	}
 
 	/**
-	 * Get all elements that has a null value in the ID parameter before
-	 * persisting.
+	 * Get all elements that has a null value in the ID parameter before persisting.
 	 * 
 	 * @param entity
 	 * @return
@@ -64,8 +64,7 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	}
 
 	/**
-	 * Get all elements that has a null value in the ID parameter before
-	 * persisting.
+	 * Get all elements that has a null value in the ID parameter before persisting.
 	 * 
 	 * @param entities
 	 * @return
@@ -92,7 +91,7 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	}
 
 	@Override
-	public T makePersistent(T entity) {
+	public T makePersistent(T entity) throws UnexpectedDatabaseException {
 		setCreationInfo(entity);
 		setUpdateInfo(entity);
 		Set<StorableObject> elementsWithNullIds = getElementsWithNullIds(entity);
@@ -107,12 +106,12 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			session.getTransaction().rollback();
 			// Reset the IDs if hibernate has put a value before rollback.
 			setNullIds(elementsWithNullIds);
-			throw e;
+			throw new UnexpectedDatabaseException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public List<T> makePersistent(List<T> entities) {
+	public List<T> makePersistent(List<T> entities) throws UnexpectedDatabaseException {
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		int objectsToStore = 0;
@@ -133,12 +132,12 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			return entities;
 		} catch (RuntimeException e) {
 			session.getTransaction().rollback();
-			throw e;
+			throw new UnexpectedDatabaseException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public void makeTransient(T entity) {
+	public void makeTransient(T entity) throws UnexpectedDatabaseException {
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
@@ -147,12 +146,12 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			session.getTransaction().commit();
 		} catch (RuntimeException e) {
 			session.getTransaction().rollback();
-			throw e;
+			throw new UnexpectedDatabaseException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public T read(Long id) {
+	public T read(Long id) throws UnexpectedDatabaseException {
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
@@ -163,12 +162,12 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			return object;
 		} catch (RuntimeException e) {
 			session.getTransaction().rollback();
-			throw e;
+			throw new UnexpectedDatabaseException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public int getRowCount() {
+	public int getRowCount() throws UnexpectedDatabaseException {
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
@@ -179,12 +178,12 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			return rows;
 		} catch (RuntimeException e) {
 			session.getTransaction().rollback();
-			throw e;
+			throw new UnexpectedDatabaseException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public List<T> getAll() {
+	public List<T> getAll() throws UnexpectedDatabaseException {
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
@@ -202,15 +201,17 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			return objects;
 		} catch (RuntimeException e) {
 			session.getTransaction().rollback();
-			throw e;
+			throw new UnexpectedDatabaseException(e.getMessage(), e);
 		}
 	}
 
 	/**
 	 * Truncates the table.
+	 * 
+	 * @throws UnexpectedDatabaseException
 	 */
 	@Override
-	public void removeAll() {
+	public void removeAll() throws UnexpectedDatabaseException {
 		List<T> elements = getAll();
 		for (T element : elements) {
 			makeTransient(element);
@@ -219,8 +220,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 
 	/**
 	 * When using lazy loading, the sets must have a proxy to avoid a
-	 * "LazyInitializationException: failed to lazily initialize a collection of..."
-	 * error. This procedure must be called before closing the session.
+	 * "LazyInitializationException: failed to lazily initialize a collection of..." error. This procedure must be
+	 * called before closing the session.
 	 * 
 	 * @param planningEvent
 	 */
@@ -234,8 +235,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 
 	/**
 	 * When using lazy loading, the sets must have a proxy to avoid a
-	 * "LazyInitializationException: failed to lazily initialize a collection of..."
-	 * error. This procedure must be called before closing the session.
+	 * "LazyInitializationException: failed to lazily initialize a collection of..." error. This procedure must be
+	 * called before closing the session.
 	 * 
 	 * @param elements
 	 */
