@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
 
@@ -22,24 +21,12 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 
 	private Class<T> type;
 
-	private SessionFactory sessionFactory = null;
-
 	public GenericDao(Class<T> type) {
 		this.type = type;
 	}
 
 	public Class<T> getType() {
 		return type;
-	}
-
-	@Override
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	@Override
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
 	}
 
 	/**
@@ -136,8 +123,7 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 		}
 	}
 
-	@Override
-	public void makeTransient(T entity) throws UnexpectedDatabaseException {
+	public void removeStorableObject(StorableObject entity) throws UnexpectedDatabaseException {
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
@@ -214,7 +200,7 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	public void removeAll() throws UnexpectedDatabaseException {
 		List<T> elements = getAll();
 		for (T element : elements) {
-			makeTransient(element);
+			deleteStorableObject(element);
 		}
 	}
 
