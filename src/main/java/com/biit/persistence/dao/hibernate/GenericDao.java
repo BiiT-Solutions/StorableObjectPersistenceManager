@@ -239,4 +239,9 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			getSessionFactory().getCache().evictNaturalIdRegions();
 		}
 	}
+
+	@Override
+	public void makeTransient(T entity) throws UnexpectedDatabaseException {
+		super.deleteStorableObject(entity);
+	}
 }
