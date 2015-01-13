@@ -231,7 +231,6 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	@Override
 	public void evictAllCache() {
 		if (getSessionFactory() != null && getSessionFactory().getCache() != null) {
-			// getSessionFactory().getCache().evictAllRegions();
 			getSessionFactory().getCache().evictCollectionRegions();
 			getSessionFactory().getCache().evictDefaultQueryRegion();
 			getSessionFactory().getCache().evictEntityRegions();

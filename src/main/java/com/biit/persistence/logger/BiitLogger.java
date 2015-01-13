@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
  * Defines basic log behavior. Uses log4j.properties.
  */
 public class BiitLogger {
-	private static final Logger logger = Logger.getLogger(BiitLogger.class);
+	private static final Logger LOGGER = Logger.getLogger(BiitLogger.class);
 
 	private BiitLogger() {
 	}
@@ -21,7 +21,7 @@ public class BiitLogger {
 	 * @param message
 	 */
 	private static void info(String message) {
-		logger.info(message);
+		LOGGER.info(message);
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class BiitLogger {
 	 * @param message
 	 */
 	private static void warning(String message) {
-		logger.warn(message);
+		LOGGER.warn(message);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class BiitLogger {
 	 */
 	private static void debug(String message) {
 		if (isDebugEnabled()) {
-			logger.debug(message);
+			LOGGER.debug(message);
 		}
 	}
 
@@ -76,7 +76,7 @@ public class BiitLogger {
 	 * @param message
 	 */
 	private static void severe(String message) {
-		logger.error(message);
+		LOGGER.error(message);
 	}
 
 	/**
@@ -127,6 +127,6 @@ public class BiitLogger {
 	}
 
 	public static boolean isDebugEnabled() {
-		return logger.isDebugEnabled();
+		return LOGGER.isDebugEnabled();
 	}
 }
