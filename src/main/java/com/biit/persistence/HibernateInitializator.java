@@ -1,9 +1,12 @@
 package com.biit.persistence;
 
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+
+import com.biit.persistence.logger.BiitLogger;
 
 /**
  * This is the utility class for getting SessionFactory
@@ -22,8 +25,8 @@ public class HibernateInitializator {
 			StandardServiceRegistry standardServiceRegistry = sb.build();
 			sessionFactory = configuration.buildSessionFactory(standardServiceRegistry);
 			return sessionFactory;
-		} catch (Throwable ex) {
-			System.err.println("Initial SessionFactory creation failed." + ex);
+		} catch (HibernateException ex) {
+			BiitLogger.errorMessage(HibernateInitializator.class.getName(), ex);
 			throw new ExceptionInInitializerError(ex);
 		}
 	}
