@@ -17,7 +17,7 @@ import com.biit.persistence.entity.StorableObject;
 public abstract class GenericDao<T extends StorableObject> extends StorableObjectDao<T> implements IGenericDao<T> {
 	// Recommended values are [15-25]. Bigger values reduce database access but
 	// increase CPU consumption.
-	private final static int MAX_OBJETS_PER_SESSION = 25;
+	private static final int MAX_OBJETS_PER_SESSION = 25;
 
 	private Class<T> type;
 

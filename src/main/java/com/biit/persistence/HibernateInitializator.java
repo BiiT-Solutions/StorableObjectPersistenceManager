@@ -6,7 +6,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-import com.biit.persistence.logger.BiitLogger;
+import com.biit.persistence.logger.StorableObjectLogger;
 
 /**
  * This is the utility class for getting SessionFactory
@@ -30,7 +30,7 @@ public class HibernateInitializator {
 			sessionFactory = configuration.buildSessionFactory(standardServiceRegistry);
 			return sessionFactory;
 		} catch (HibernateException ex) {
-			BiitLogger.errorMessage(HibernateInitializator.class.getName(), ex);
+			StorableObjectLogger.errorMessage(HibernateInitializator.class.getName(), ex);
 			throw new ExceptionInInitializerError(ex);
 		}
 	}

@@ -5,10 +5,10 @@ import org.apache.log4j.Logger;
 /**
  * Defines basic log behavior. Uses log4j.properties.
  */
-public class BiitLogger {
-	private static final Logger LOGGER = Logger.getLogger(BiitLogger.class);
+public class StorableObjectLogger {
+	private static final Logger LOGGER = Logger.getLogger(StorableObjectLogger.class);
 
-	private BiitLogger() {
+	private StorableObjectLogger() {
 	}
 
 	/**
