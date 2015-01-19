@@ -23,7 +23,8 @@ import com.liferay.portal.model.User;
 public abstract class StorableObject implements Serializable {
 	private static final long serialVersionUID = 1254938842002423347L;
 
-	public final static int MAX_UNIQUE_COLUMN_LENGTH = 190;
+	public static final int MAX_UNIQUE_COLUMN_LENGTH = 190;
+	public static final int HASH_CODE_SEED = 31;
 
 	// GenerationType.Table stores into hibernate_sequence the name of the table
 	// as a VARCHAR(255) when using
@@ -129,7 +130,7 @@ public abstract class StorableObject implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int prime = HASH_CODE_SEED;
 		int result = 1;
 		result = (prime * result) + ((comparationId == null) ? 0 : comparationId.hashCode());
 		return result;
