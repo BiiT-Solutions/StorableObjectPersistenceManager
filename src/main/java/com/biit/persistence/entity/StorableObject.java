@@ -1,5 +1,6 @@
 package com.biit.persistence.entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -19,7 +20,9 @@ import com.liferay.portal.model.User;
 @Entity
 @Table(name = "storable_objects")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class StorableObject {
+public abstract class StorableObject implements Serializable {
+	private static final long serialVersionUID = 1254938842002423347L;
+
 	public final static int MAX_UNIQUE_COLUMN_LENGTH = 190;
 
 	// GenerationType.Table stores into hibernate_sequence the name of the table
