@@ -38,15 +38,17 @@ public class StorableObjectDao<T> implements IStorableObjectDao {
 
 	@Override
 	public void deleteStorableObject(StorableObject entity) throws UnexpectedDatabaseException {
-		Session session = getSessionFactory().getCurrentSession();
-		session.beginTransaction();
-		try {
-			session.delete(entity);
-			session.flush();
-			session.getTransaction().commit();
-		} catch (RuntimeException e) {
-			session.getTransaction().rollback();
-			throw new UnexpectedDatabaseException(e.getMessage(), e);
+		if (entity.getId() != null) {
+			Session session = getSessionFactory().getCurrentSession();
+			session.beginTransaction();
+			try {
+				session.delete(entity);
+				session.flush();
+				session.getTransaction().commit();
+			} catch (RuntimeException e) {
+				session.getTransaction().rollback();
+				throw new UnexpectedDatabaseException(e.getMessage(), e);
+			}
 		}
 	}
 

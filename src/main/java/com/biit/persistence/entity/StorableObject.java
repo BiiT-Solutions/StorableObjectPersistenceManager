@@ -158,6 +158,9 @@ public abstract class StorableObject implements Serializable {
 		return true;
 	}
 
+	/**
+	 * Reset 'id' and 'comparationId'
+	 */
 	public void resetIds() {
 		setId(null);
 		comparationId = IdGenerator.createId();
