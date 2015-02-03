@@ -148,11 +148,11 @@ public abstract class StorableObject implements Serializable {
 			return false;
 		}
 		StorableObject other = (StorableObject) obj;
-		if (comparationId == null) {
-			if (other.comparationId != null) {
+		if (getComparationId() == null) {
+			if (other.getComparationId() != null) {
 				return false;
 			}
-		} else if (!comparationId.equals(other.comparationId)) {
+		} else if (!getComparationId().equals(other.getComparationId())) {
 			return false;
 		}
 		return true;
