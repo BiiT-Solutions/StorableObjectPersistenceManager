@@ -22,6 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
 		<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
+		<maven-resources-plugin.version>2.7</maven-resources-plugin.version>
 		<maven-surefire.version>2.17</maven-surefire.version>
 		<exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
 		<org.testng.version>6.8.7</org.testng.version>
@@ -112,6 +113,11 @@
 						<suiteXmlFile>src/test/config/testng.xml</suiteXmlFile>
 					</suiteXmlFiles>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven-resources-plugin.version}</version>
 			</plugin>
 		</plugins>
 	</build>
