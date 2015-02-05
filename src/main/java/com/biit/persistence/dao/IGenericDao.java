@@ -2,8 +2,10 @@ package com.biit.persistence.dao;
 
 import java.util.List;
 
+import com.biit.persistence.dao.exceptions.ElementCannotBePersistedException;
 import com.biit.persistence.dao.exceptions.UnexpectedDatabaseException;
 import com.biit.persistence.entity.StorableObject;
+import com.biit.persistence.entity.exceptions.ElementCannotBeRemovedException;
 
 public interface IGenericDao<T extends StorableObject> extends IStorableObjectDao {
 
@@ -21,8 +23,9 @@ public interface IGenericDao<T extends StorableObject> extends IStorableObjectDa
 	 * @param planningEvent
 	 * @return
 	 * @throws UnexpectedDatabaseException
+	 * @throws ElementCannotBePersistedException
 	 */
-	T makePersistent(T entity) throws UnexpectedDatabaseException;
+	T makePersistent(T entity) throws UnexpectedDatabaseException, ElementCannotBePersistedException;
 
 	/**
 	 * Gets the total number of elements.
@@ -63,5 +66,5 @@ public interface IGenericDao<T extends StorableObject> extends IStorableObjectDa
 	 */
 	void evictAllCache();
 
-	void makeTransient(T entity) throws UnexpectedDatabaseException;
+	void makeTransient(T entity) throws UnexpectedDatabaseException, ElementCannotBeRemovedException;
 }

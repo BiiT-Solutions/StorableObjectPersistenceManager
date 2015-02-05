@@ -11,8 +11,10 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
 
 import com.biit.persistence.dao.IGenericDao;
+import com.biit.persistence.dao.exceptions.ElementCannotBePersistedException;
 import com.biit.persistence.dao.exceptions.UnexpectedDatabaseException;
 import com.biit.persistence.entity.StorableObject;
+import com.biit.persistence.entity.exceptions.ElementCannotBeRemovedException;
 
 public abstract class GenericDao<T extends StorableObject> extends StorableObjectDao<T> implements IGenericDao<T> {
 	// Recommended values are [15-25]. Bigger values reduce database access but
@@ -78,7 +80,7 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	}
 
 	@Override
-	public T makePersistent(T entity) throws UnexpectedDatabaseException {
+	public T makePersistent(T entity) throws UnexpectedDatabaseException, ElementCannotBePersistedException {
 		setCreationInfo(entity);
 		setUpdateInfo(entity);
 		Set<StorableObject> elementsWithNullIds = getElementsWithNullIds(entity);
@@ -240,7 +242,7 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	}
 
 	@Override
-	public void makeTransient(T entity) throws UnexpectedDatabaseException {
+	public void makeTransient(T entity) throws UnexpectedDatabaseException, ElementCannotBeRemovedException {
 		super.deleteStorableObject(entity);
 	}
 }
