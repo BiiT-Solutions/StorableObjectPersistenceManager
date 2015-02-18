@@ -175,7 +175,7 @@ public abstract class StorableObject implements Serializable {
 		this.comparationId = comparationId;
 	}
 
-	public String getComparationId() {
+	public synchronized String getComparationId() {
 		return comparationId;
 	}
 
