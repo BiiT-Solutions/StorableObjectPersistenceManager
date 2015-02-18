@@ -16,10 +16,15 @@
 			<name>biit-releases</name>
 			<url>https://dev.biit-solutions.com:8443/mavenartifactory/ext-release-local</url>
 		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>libs-snapshot</name>
+			<url>https://dev.biit-solutions.com:8443/mavenartifactory/libs-snapshot</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<scm>
-		<developerConnection>scm:git:ssh://jhortelano@dev.biit-solutions.com:StorableObjectPersistenceManager.git</developerConnection>
+		<developerConnection>scm:git:ssh://dev.biit-solutions.com:StorableObjectPersistenceManager.git</developerConnection>
 		<tag>storableobject-persistence-manager-0.2.1</tag>
 	</scm>
 
