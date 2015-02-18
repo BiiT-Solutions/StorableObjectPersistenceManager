@@ -19,7 +19,7 @@
 	</distributionManagement>
 
 	<scm>
-		<developerConnection>scm:git:git://dev.biit-solutions.com:StorableObjectPersistenceManager.git</developerConnection>
+		<developerConnection>scm:git:ssh://jhortelano@dev.biit-solutions.com:StorableObjectPersistenceManager.git</developerConnection>
 		<tag>storableobject-persistence-manager-0.2.1</tag>
 	</scm>
 
