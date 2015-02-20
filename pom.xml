@@ -5,13 +5,13 @@
 	<groupId>com.biit</groupId>
 	<artifactId>storableobject-persistence-manager</artifactId>
 	<packaging>jar</packaging>
-	<version>0.2.2-SNAPSHOT</version>
+	<version>0.2.2</version>
 	<name>Liferay Based Generic Persistence Manager</name>
 	<description>Basic functionality for persisting projects based on Liferay Users</description>
 
 	<distributionManagement>
 		<repository>
-			<id>central</id>
+			<id>snapshots</id>
 			<name>biit-releases</name>
 			<url>https://dev.biit-solutions.com:8443/mavenartifactory/ext-release-local</url>
 		</repository>
@@ -25,7 +25,7 @@
 	<scm>
 		<connection>scm:git:dev.biit-solutions.com:StorableObjectPersistenceManager.git</connection>
 		<developerConnection>scm:git:dev.biit-solutions.com:StorableObjectPersistenceManager.git</developerConnection>
-		<tag>storableobject-persistence-manager-0.2.1</tag>
+		<tag>storableobject-persistence-manager-0.2.2</tag>
 	</scm>
 
 	<properties>
@@ -147,7 +147,7 @@
 					<checkModificationExcludes>
 						<checkModificationExclude>pom.xml</checkModificationExclude>
 					</checkModificationExcludes>
-					<pushChanges>false</pushChanges>
+					<!--<pushChanges>false</pushChanges>-->
 				</configuration>
 			</plugin>
 		</plugins>
