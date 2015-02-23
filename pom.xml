@@ -47,7 +47,7 @@
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<liferay-service-common.version>0.4.0</liferay-service-common.version>
 		<liferay-authentication-client.version>0.5.0</liferay-authentication-client.version>
-		<project.scm.id>central</project.scm.id>
+		<project.scm.id>git</project.scm.id>
 	</properties>
 
 	<dependencies>
