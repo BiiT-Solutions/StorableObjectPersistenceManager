@@ -5,27 +5,27 @@
 	<groupId>com.biit</groupId>
 	<artifactId>storableobject-persistence-manager</artifactId>
 	<packaging>jar</packaging>
-	<version>0.2.4-SNAPSHOT</version>
+	<version>0.2.3</version>
 	<name>Liferay Based Generic Persistence Manager</name>
 	<description>Basic functionality for persisting projects based on Liferay Users</description>
 
 	<distributionManagement>
 		<repository>
-			<id>central</id>
+			<id>central-release</id>
 			<name>biit-releases</name>
 			<url>https://dev.biit-solutions.com:8443/mavenartifactory/ext-release-local</url>
 		</repository>
 		<snapshotRepository>
-			<id>snapshots</id>
+			<id>snapshots-release</id>
 			<name>libs-snapshot</name>
-			<url>https://dev.biit-solutions.com:8443/mavenartifactory/libs-snapshot</url>
+			<url>https://dev.biit-solutions.com:8443/mavenartifactory/ext-snapshot-local</url>
 		</snapshotRepository>
 	</distributionManagement>
 
 	<scm>
 		<connection>scm:git:dev.biit-solutions.com:StorableObjectPersistenceManager.git</connection>
 		<developerConnection>scm:git:dev.biit-solutions.com:StorableObjectPersistenceManager.git</developerConnection>
-		<tag>storableobject-persistence-manager-0.2.1</tag>
+		<tag>storableobject-persistence-manager-0.2.3</tag>
 	</scm>
 
 	<properties>
@@ -47,7 +47,7 @@
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<liferay-service-common.version>0.4.0</liferay-service-common.version>
 		<liferay-authentication-client.version>0.5.0</liferay-authentication-client.version>
-		<project.scm.id>central</project.scm.id>
+		<project.scm.id>central-release</project.scm.id>
 	</properties>
 
 	<dependencies>
