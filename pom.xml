@@ -24,7 +24,7 @@
 
 	<scm>
 		<connection>scm:git:dev.biit-solutions.com:/opt/projects/StorableObjectPersistenceManager.git</connection>
-		<developerConnection>scm:git:dev.biit-solutions.com:/opt/projects/StorableObjectPersistenceManager.git</developerConnection>
+		<developerConnection>scm:git:ssh://dev.biit-solutions.com:/opt/projects/StorableObjectPersistenceManager.git</developerConnection>
 		<tag>storableobject-persistence-manager-0.2.2</tag>
 	</scm>
 
