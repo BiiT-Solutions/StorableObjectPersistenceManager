@@ -144,7 +144,7 @@ public abstract class StorableObject implements Serializable {
 		if (obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (!this.getClass().isInstance(obj)) {
 			return false;
 		}
 		StorableObject other = (StorableObject) obj;
