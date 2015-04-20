@@ -46,7 +46,7 @@
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<project.scm.id>git</project.scm.id>
 		<!-- BiiT dependencies -->
-		<liferay-service-common.version>(0.6,0.7]</liferay-service-common.version>
+		<liferay-service-common.version>[0.6,0.7)</liferay-service-common.version>
 	</properties>
 
 	<dependencies>
