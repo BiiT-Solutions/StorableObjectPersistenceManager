@@ -46,8 +46,8 @@
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<project.scm.id>git</project.scm.id>
 		<!-- BiiT dependencies -->
-		<liferay-service-common.version>0.4.0</liferay-service-common.version>
-		<liferay-authentication-client.version>0.5.0</liferay-authentication-client.version>
+		<liferay-service-common.version>(0.6,0.7]</liferay-service-common.version>
+		<liferay-authentication-client.version>(0.7,0.8]</liferay-authentication-client.version>
 	</properties>
 
 	<dependencies>
