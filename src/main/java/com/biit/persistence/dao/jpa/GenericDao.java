@@ -27,6 +27,11 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 	@Override
 	public void makePersistent(EntityClass entity) {
 		getEntityManager().persist(entity);
+		// We force a flush due to in some cases a bidirectional relationships needs a @ManyToOne(optional = false) to
+		// perform an orphan removals. But without the flush, the optional causes an exception due to the element is set
+		// to null.
+		// http://stackoverflow.com/questions/3068817/hibernate-triggering-constraint-violations-using-orphanremoval
+		getEntityManager().flush();
 	}
 
 	@Override

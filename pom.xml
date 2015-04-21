@@ -6,8 +6,8 @@
 	<artifactId>storableobject-persistence-manager</artifactId>
 	<packaging>jar</packaging>
 	<version>0.2.23-SNAPSHOT</version>
-	<name>Liferay Based Generic Persistence Manager</name>
-	<description>Basic functionality for persisting projects based on Liferay Users</description>
+	<name>Form Based Generic Persistence Manager</name>
+	<description>Basic functionality for persisting projects objects.</description>
 
 	<distributionManagement>
 		<repository>
