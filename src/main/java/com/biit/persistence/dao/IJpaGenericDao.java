@@ -10,6 +10,8 @@ public interface IJpaGenericDao<EntityClass, PrimaryKeyClass extends Serializabl
 	void makeTransient(EntityClass entity);
 
 	void makePersistent(EntityClass entity);
+	
+	EntityClass merge(EntityClass entity);
 
 	EntityClass get(PrimaryKeyClass id);
 
