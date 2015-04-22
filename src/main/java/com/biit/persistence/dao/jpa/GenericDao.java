@@ -26,10 +26,10 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 
 	@Override
 	public void makePersistent(EntityClass entity) {
-		if(entity==null){
+		if (entity == null) {
 			throw new NullPointerException();
 		}
-		
+
 		getEntityManager().persist(entity);
 		// We force a flush due to in some cases a bidirectional relationships needs a @ManyToOne(optional = false) to
 		// perform an orphan removals. But without the flush, the optional causes an exception due to the element is set
@@ -37,10 +37,10 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 		// http://stackoverflow.com/questions/3068817/hibernate-triggering-constraint-violations-using-orphanremoval
 		getEntityManager().flush();
 	}
-	
+
 	@Override
 	public EntityClass merge(EntityClass entity) {
-		if(entity==null){
+		if (entity == null) {
 			throw new NullPointerException();
 		}
 		EntityClass managedEntity = getEntityManager().merge(entity);
@@ -55,14 +55,14 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 
 	@Override
 	public EntityClass get(PrimaryKeyClass id) {
-		return getEntityManager().find(entityClass, id);
+		return getEntityManager().find(getEntityClass(), id);
 	}
 
 	@Override
 	public int getRowCount() {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> query = cb.createQuery(Long.class);
-		Root<EntityClass> root = query.from(entityClass);
+		Root<EntityClass> root = query.from(getEntityClass());
 
 		query.select(cb.count(root));
 		return getEntityManager().createQuery(query).getSingleResult().intValue();
@@ -70,8 +70,8 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 
 	@Override
 	public List<EntityClass> getAll() {
-		CriteriaQuery<EntityClass> query = getEntityManager().getCriteriaBuilder().createQuery(entityClass);
-		query.select(query.from(entityClass));
+		CriteriaQuery<EntityClass> query = getEntityManager().getCriteriaBuilder().createQuery(getEntityClass());
+		query.select(query.from(getEntityClass()));
 		try {
 			return getEntityManager().createQuery(query).getResultList();
 		} catch (NoResultException nre) {
