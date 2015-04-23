@@ -14,6 +14,13 @@ import javax.persistence.InheritanceType;
 import com.biit.persistence.utils.IdGenerator;
 import com.liferay.portal.model.User;
 
+/**
+ * Base StorableObject class. This class holds all the basic storable object
+ * information doesn't have the copy data methods and thus doesn't require that
+ * it's child classes implement it. This base class is used as in the USMO
+ * project.
+ *
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class BaseStorableObject implements Serializable {
@@ -129,7 +136,8 @@ public abstract class BaseStorableObject implements Serializable {
 		final int prime = HASH_CODE_SEED;
 		int result = 1;
 		result = (prime * result)
-				+ ((getComparationId() == null) ? 0 : getComparationId().hashCode());
+				+ ((getComparationId() == null) ? 0 : getComparationId()
+						.hashCode());
 		return result;
 	}
 
@@ -176,5 +184,5 @@ public abstract class BaseStorableObject implements Serializable {
 	public synchronized String getComparationId() {
 		return comparationId;
 	}
-	
+
 }
