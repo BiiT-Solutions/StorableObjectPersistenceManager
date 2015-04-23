@@ -11,6 +11,9 @@ import com.biit.persistence.entity.exceptions.NotValidStorableObjectException;
 public abstract class StorableObject extends BaseStorableObject implements Serializable {
 	private static final long serialVersionUID = 1254938842002423347L;
 
+	protected StorableObject() {
+		super();
+	}
 
 	/**
 	 * Needed for the drools engine <br>
