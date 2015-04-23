@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import com.biit.persistence.dao.IJpaGenericDao;
+import com.biit.persistence.entity.exceptions.ElementCannotBeRemovedException;
 
 public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializable> implements
 		IJpaGenericDao<EntityClass, PrimaryKeyClass> {
@@ -49,7 +50,7 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 	}
 
 	@Override
-	public void makeTransient(EntityClass entity) {
+	public void makeTransient(EntityClass entity) throws ElementCannotBeRemovedException {
 		getEntityManager().remove(getEntityManager().contains(entity) ? entity : getEntityManager().merge(entity));
 	}
 
