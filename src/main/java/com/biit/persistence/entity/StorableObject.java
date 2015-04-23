@@ -21,6 +21,10 @@ public abstract class StorableObject extends BaseStorableObject implements
 		Serializable {
 	private static final long serialVersionUID = 1254938842002423347L;
 
+	protected StorableObject() {
+		super();
+	}
+
 	/**
 	 * Needed for the drools engine <br>
 	 * The identifiers in drools can't contain dashes so they are eliminated

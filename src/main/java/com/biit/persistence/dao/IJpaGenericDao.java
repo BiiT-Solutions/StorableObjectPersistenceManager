@@ -5,12 +5,14 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import com.biit.persistence.entity.exceptions.ElementCannotBeRemovedException;
+
 public interface IJpaGenericDao<EntityClass, PrimaryKeyClass extends Serializable> {
 
-	void makeTransient(EntityClass entity);
+	void makeTransient(EntityClass entity) throws ElementCannotBeRemovedException;
 
 	void makePersistent(EntityClass entity);
-	
+
 	EntityClass merge(EntityClass entity);
 
 	EntityClass get(PrimaryKeyClass id);
@@ -20,7 +22,6 @@ public interface IJpaGenericDao<EntityClass, PrimaryKeyClass extends Serializabl
 	List<EntityClass> getAll();
 
 	void evictAllCache();
-	
+
 	EntityManager getEntityManager();
 }
-
