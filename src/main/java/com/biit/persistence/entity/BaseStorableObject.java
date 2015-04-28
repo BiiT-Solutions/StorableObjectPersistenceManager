@@ -153,7 +153,7 @@ public abstract class BaseStorableObject implements Serializable {
 			return false;
 		}
 
-		StorableObject other = (StorableObject) obj;
+		BaseStorableObject other = (BaseStorableObject) obj;
 		if (getComparationId() == null) {
 			if (other.getComparationId() != null) {
 				return false;
