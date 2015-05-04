@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Cache;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -83,6 +85,12 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 	@Override
 	public void evictAllCache() {
 		getEntityManager().getEntityManagerFactory().getCache().evictAll();
+	}
+	
+	public void evictCache() {
+		EntityManagerFactory factory = getEntityManager().getEntityManagerFactory();
+		Cache cache = factory.getCache();
+		cache.evict(getEntityClass());
 	}
 
 	public Class<EntityClass> getEntityClass() {
