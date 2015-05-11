@@ -28,7 +28,7 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 	}
 
 	@Override
-	public void makePersistent(EntityClass entity) {
+	public EntityClass makePersistent(EntityClass entity) {
 		if (entity == null) {
 			throw new NullPointerException();
 		}
@@ -39,6 +39,8 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 		// to null.
 		// http://stackoverflow.com/questions/3068817/hibernate-triggering-constraint-violations-using-orphanremoval
 		getEntityManager().flush();
+		
+		return entity;
 	}
 
 	@Override

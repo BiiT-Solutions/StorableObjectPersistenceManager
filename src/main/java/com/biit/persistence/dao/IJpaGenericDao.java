@@ -11,7 +11,7 @@ public interface IJpaGenericDao<EntityClass, PrimaryKeyClass extends Serializabl
 
 	void makeTransient(EntityClass entity) throws ElementCannotBeRemovedException;
 
-	void makePersistent(EntityClass entity);
+	EntityClass makePersistent(EntityClass entity);
 
 	EntityClass merge(EntityClass entity);
 
