@@ -62,4 +62,10 @@ public abstract class StorableObject extends BaseStorableObject implements
 		setUpdateTime(object.getUpdateTime());
 	}
 
+	public void resetUserTimestampInfo(Long userId){
+		setCreatedBy(userId);
+		setUpdatedBy(userId);
+		setCreationTime();
+		setUpdateTime();
+	}
 }
