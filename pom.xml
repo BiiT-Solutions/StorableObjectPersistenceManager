@@ -46,7 +46,7 @@
 		<hibernate.version>4.3.8.Final</hibernate.version>
 		<project.scm.id>git</project.scm.id>
 		<!-- BiiT dependencies -->
-		<liferay-service-common.version>[0.6,0.7)</liferay-service-common.version>
+		<user-manager.version>[0.1,0.2)</user-manager.version>
 	</properties>
 
 	<dependencies>
@@ -64,9 +64,9 @@
 		</dependency>
 		<!-- User, Groups -->
 		<dependency>
-			<groupId>com.biit.liferay</groupId>
-			<artifactId>liferay-service-common</artifactId>
-			<version>${liferay-service-common.version}</version>
+			<groupId>com.biit</groupId>
+			<artifactId>user-manager</artifactId>
+			<version>${user-manager.version}</version>
 		</dependency>
 		<!-- Hibernate -->
 		<dependency>
