@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.biit</groupId>
 	<artifactId>storableobject-persistence-manager</artifactId>
 	<packaging>jar</packaging>
-	<version>0.3.1-SNAPSHOT</version>
+	<version>0.2.43-SNAPSHOT</version>
 	<name>Form Based Generic Persistence Manager</name>
 	<description>Basic functionality for persisting projects objects.</description>
 
@@ -46,7 +47,7 @@
 		<hibernate.version>4.3.8.Final</hibernate.version>
 		<project.scm.id>git</project.scm.id>
 		<!-- BiiT dependencies -->
-		<user-manager.version>[0.1,0.2)</user-manager.version>
+		<liferay-service-common.version>[0.6,0.6.9)</liferay-service-common.version>
 	</properties>
 
 	<dependencies>
@@ -64,9 +65,9 @@
 		</dependency>
 		<!-- User, Groups -->
 		<dependency>
-			<groupId>com.biit</groupId>
-			<artifactId>user-manager</artifactId>
-			<version>${user-manager.version}</version>
+			<groupId>com.biit.liferay</groupId>
+			<artifactId>liferay-service-common</artifactId>
+			<version>${liferay-service-common.version}</version>
 		</dependency>
 		<!-- Hibernate -->
 		<dependency>
