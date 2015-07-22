@@ -12,12 +12,11 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
 import com.biit.persistence.utils.IdGenerator;
-import com.liferay.portal.model.User;
+import com.biit.usermanager.entity.IUser;
 
 /**
- * Base StorableObject class. This class holds all the basic storable object
- * information doesn't have the copy data methods and thus doesn't require that
- * it's child classes implement it. This base class is used as in the USMO
+ * Base StorableObject class. This class holds all the basic storable object information doesn't have the copy data
+ * methods and thus doesn't require that it's child classes implement it. This base class is used as in the USMO
  * project.
  *
  */
@@ -80,8 +79,7 @@ public abstract class BaseStorableObject implements Serializable {
 		if (creationTime != null) {
 			return creationTime;
 		} else {
-			creationTime = new java.sql.Timestamp(
-					new java.util.Date().getTime());
+			creationTime = new java.sql.Timestamp(new java.util.Date().getTime());
 			return creationTime;
 		}
 	}
@@ -107,9 +105,9 @@ public abstract class BaseStorableObject implements Serializable {
 		this.createdBy = createdBy;
 	}
 
-	public void setCreatedBy(User user) {
+	public void setCreatedBy(IUser<Long> user) {
 		if (user != null) {
-			createdBy = user.getUserId();
+			createdBy = user.getId();
 		}
 	}
 
@@ -125,9 +123,9 @@ public abstract class BaseStorableObject implements Serializable {
 		this.updatedBy = updatedBy;
 	}
 
-	public void setUpdatedBy(User user) {
+	public void setUpdatedBy(IUser<Long> user) {
 		if (user != null) {
-			updatedBy = user.getUserId();
+			updatedBy = user.getId();
 		}
 	}
 
@@ -135,9 +133,7 @@ public abstract class BaseStorableObject implements Serializable {
 	public int hashCode() {
 		final int prime = HASH_CODE_SEED;
 		int result = 1;
-		result = (prime * result)
-				+ ((getComparationId() == null) ? 0 : getComparationId()
-						.hashCode());
+		result = (prime * result) + ((getComparationId() == null) ? 0 : getComparationId().hashCode());
 		return result;
 	}
 
