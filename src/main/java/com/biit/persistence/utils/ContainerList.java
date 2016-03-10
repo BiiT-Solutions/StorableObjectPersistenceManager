@@ -124,4 +124,12 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 		}
 	}
 
+	public IDataProvider<T> getProvider() {
+		return provider;
+	}
+
+	public IKeyGenerator<T> getKeyGenerator() {
+		return keyGenerator;
+	}
+
 }
