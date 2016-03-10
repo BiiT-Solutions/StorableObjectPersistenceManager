@@ -3,6 +3,7 @@ package com.biit.persistence.utils;
 import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,4 +133,7 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 		return keyGenerator;
 	}
 
+	public Collection<Object> keys() {
+		return codex.keySet();
+	}
 }
