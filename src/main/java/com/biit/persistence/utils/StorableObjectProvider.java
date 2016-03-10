@@ -1,11 +1,11 @@
 package com.biit.persistence.utils;
 
 import com.biit.persistence.dao.IJpaGenericDao;
-import com.biit.persistence.entity.StorableObject;
+import com.biit.persistence.entity.BaseStorableObject;
 import com.biit.persistence.entity.exceptions.ElementCannotBeRemovedException;
 import com.biit.persistence.logger.StorableObjectLogger;
 
-public abstract class StorableObjectProvider<T extends StorableObject> implements IDataProvider<T> {
+public abstract class StorableObjectProvider<T extends BaseStorableObject> implements IDataProvider<T> {
 
 	private IJpaGenericDao<T, ?> dao;
 
