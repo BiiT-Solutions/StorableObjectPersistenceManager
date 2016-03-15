@@ -7,7 +7,7 @@ import com.biit.persistence.logger.StorableObjectLogger;
 
 public abstract class StorableObjectProvider<T extends BaseStorableObject> implements IDataProvider<T> {
 
-	private IJpaGenericDao<T, ?> dao;
+	private final IJpaGenericDao<T, ?> dao;
 
 	public StorableObjectProvider(IJpaGenericDao<T, ?> dao) {
 		this.dao = dao;
@@ -32,9 +32,8 @@ public abstract class StorableObjectProvider<T extends BaseStorableObject> imple
 		}
 	}
 
-	@Override
-	public int size() {
-		return dao.getRowCount();
+	public IJpaGenericDao<T, ?> getDao() {
+		return dao;
 	}
 
 }
