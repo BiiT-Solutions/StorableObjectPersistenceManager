@@ -143,4 +143,8 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 	public Object getIdByIndex(int index) {
 		return getKeyGenerator().generate(get(index));
 	}
+	
+	public boolean containsKey(Object itemId) {
+		return codex.containsKey(itemId);
+	}
 }
