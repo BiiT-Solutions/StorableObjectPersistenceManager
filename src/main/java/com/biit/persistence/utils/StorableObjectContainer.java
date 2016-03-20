@@ -14,5 +14,4 @@ public class StorableObjectContainer<T extends BaseStorableObject> extends Conta
 			}
 		});
 	}
-
 }

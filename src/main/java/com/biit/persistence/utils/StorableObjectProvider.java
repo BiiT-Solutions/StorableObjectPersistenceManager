@@ -36,4 +36,8 @@ public abstract class StorableObjectProvider<T extends BaseStorableObject> imple
 		return dao;
 	}
 
+	public T newEntity() throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
+
 }
