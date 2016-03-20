@@ -14,4 +14,12 @@ public class StorableObjectContainer<T extends BaseStorableObject> extends Conta
 			}
 		});
 	}
+
+	public T addItem() {
+		throw new UnsupportedOperationException();
+	}
+
+	public T addItemAt(int index) {
+		throw new UnsupportedOperationException();
+	}
 }
