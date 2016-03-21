@@ -29,7 +29,7 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 		this.provider = provider;
 		this.keyGenerator = keyGenerator;
 		view.addAll(provider.get(0, provider.size()));
-		for(T element: view){
+		for (T element : view) {
 			codex.put(keyGenerator.generate(element), element);
 		}
 	}
@@ -139,8 +139,12 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 	public Collection<Object> keys() {
 		return codex.keySet();
 	}
-	
+
 	public Object getIdByIndex(int index) {
 		return getKeyGenerator().generate(get(index));
+	}
+
+	public boolean containsKey(Object itemId) {
+		return codex.containsKey(itemId);
 	}
 }
