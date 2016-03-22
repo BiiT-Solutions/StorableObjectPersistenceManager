@@ -2,6 +2,9 @@ package com.biit.persistence.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -72,27 +75,34 @@ public abstract class BaseStorableObject implements Serializable {
 	}
 
 	public void setCreationTime() {
-		setCreationTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+		setCreationTime(new java.sql.Timestamp(new Date().getTime()));
 	}
 
 	public Timestamp getCreationTime() {
 		if (creationTime != null) {
 			return creationTime;
 		} else {
-			creationTime = new java.sql.Timestamp(new java.util.Date().getTime());
+			creationTime = new java.sql.Timestamp(getRoundedMilliseconds(new Date()));
 			return creationTime;
 		}
 	}
 
-	public void setUpdateTime() {
-		setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+	public void setUpdateTime() {		
+		setUpdateTime(new java.sql.Timestamp(new Date().getTime()));
+	}
+
+	private long getRoundedMilliseconds(Date date) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTimeInMillis();
 	}
 
 	public Timestamp getUpdateTime() {
 		if (updateTime != null) {
 			return updateTime;
 		} else {
-			updateTime = new java.sql.Timestamp(new java.util.Date().getTime());
+			updateTime = new java.sql.Timestamp(getRoundedMilliseconds(new Date()));
 			return updateTime;
 		}
 	}
@@ -112,11 +122,11 @@ public abstract class BaseStorableObject implements Serializable {
 	}
 
 	public void setCreationTime(Timestamp dateCreated) {
-		creationTime = dateCreated;
+		creationTime = new Timestamp(getRoundedMilliseconds(dateCreated));
 	}
 
 	public void setUpdateTime(Timestamp dateUpdated) {
-		updateTime = dateUpdated;
+		updateTime = new Timestamp(getRoundedMilliseconds(dateUpdated));
 	}
 
 	public void setUpdatedBy(Long updatedBy) {
