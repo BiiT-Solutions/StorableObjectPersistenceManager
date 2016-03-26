@@ -22,4 +22,5 @@ public class StorableObjectContainer<T extends BaseStorableObject> extends Conta
 	public T addItemAt(int index) {
 		throw new UnsupportedOperationException();
 	}
+
 }
