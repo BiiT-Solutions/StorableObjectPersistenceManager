@@ -4,17 +4,20 @@ import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ContainerList<T> extends AbstractList<T> implements Serializable, IIndexedList, IDataContainer {
 	private static final long serialVersionUID = 7107564701510121074L;
 
 	private final List<T> view;
-	private final List<T> addedElements;
-	private final List<T> modifiedElements;
-	private final List<T> removedElements;
+	private final Set<T> addedElements;
+	private final Set<T> modifiedElements;
+	private final Set<T> removedElements;
 	private final Map<Object, T> codex;
 	private final IDataProvider<T> provider;
 	private final IKeyGenerator<T> keyGenerator;
@@ -22,9 +25,9 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 	public ContainerList(IDataProvider<T> provider, IKeyGenerator<T> keyGenerator) {
 		super();
 		view = new ArrayList<>();
-		addedElements = new ArrayList<>();
-		modifiedElements = new ArrayList<>();
-		removedElements = new ArrayList<>();
+		addedElements = new LinkedHashSet<>();
+		modifiedElements = new LinkedHashSet<>();
+		removedElements = new LinkedHashSet<>();
 		codex = new HashMap<>();
 		this.provider = provider;
 		this.keyGenerator = keyGenerator;
@@ -152,5 +155,17 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 
 	public boolean containsKey(Object itemId) {
 		return codex.containsKey(itemId);
+	}
+
+	public Collection<T> getAddedElements() {
+		return Collections.unmodifiableCollection(addedElements);
+	}
+
+	public Collection<T> getModifiedElements() {
+		return Collections.unmodifiableCollection(modifiedElements);
+	}
+
+	public Collection<T> getRemovedElements() {
+		return Collections.unmodifiableCollection(removedElements);
 	}
 }
