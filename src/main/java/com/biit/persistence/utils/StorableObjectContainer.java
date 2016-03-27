@@ -16,11 +16,15 @@ public class StorableObjectContainer<T extends BaseStorableObject> extends Conta
 	}
 
 	public T addItem() {
-		throw new UnsupportedOperationException();
+		T newItem = ((StorableObjectProvider<T>) getProvider()).newEntity();
+		add(newItem);
+		return newItem;
 	}
 
 	public T addItemAt(int index) {
-		throw new UnsupportedOperationException();
+		T newItem = ((StorableObjectProvider<T>) getProvider()).newEntity();
+		add(index, newItem);
+		return newItem;
 	}
 
 }

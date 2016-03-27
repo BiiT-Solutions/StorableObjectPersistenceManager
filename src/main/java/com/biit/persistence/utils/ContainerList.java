@@ -38,11 +38,11 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 	}
 
 	public void update(T originalElement) {
-		if(!addedElements.contains(originalElement)){
+		if (!addedElements.contains(originalElement)) {
 			modifiedElements.add(originalElement);
 		}
 	}
-	
+
 	public void update(T originalElement, T modifiedElement) {
 		set(view.indexOf(originalElement), modifiedElement);
 		if (addedElements.contains(originalElement)) {
@@ -95,6 +95,13 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 		}
 		removeElement(elementToRemove);
 		return true;
+	}
+
+	@Override
+	public T remove(int index) {
+		T elementToRemove = super.remove(index);
+		removeElement(elementToRemove);
+		return elementToRemove;
 	}
 
 	private void removeElement(T elementToRemove) {
