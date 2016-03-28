@@ -99,7 +99,7 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 
 	@Override
 	public T remove(int index) {
-		T elementToRemove = super.remove(index);
+		T elementToRemove = view.remove(index);
 		removeElement(elementToRemove);
 		return elementToRemove;
 	}
