@@ -1,19 +1,25 @@
 package com.biit.persistence.utils;
 
+import java.beans.IntrospectionException;
 import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.biit.persistence.logger.StorableObjectLogger;
+
 public class ContainerList<T> extends AbstractList<T> implements Serializable, IIndexedList, IDataContainer {
 	private static final long serialVersionUID = 7107564701510121074L;
 
+	private final Class<T> clazz;
 	private final List<T> view;
 	private final Set<T> addedElements;
 	private final Set<T> modifiedElements;
@@ -22,8 +28,9 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 	private final IDataProvider<T> provider;
 	private final IKeyGenerator<T> keyGenerator;
 
-	public ContainerList(IDataProvider<T> provider, IKeyGenerator<T> keyGenerator) {
+	public ContainerList(Class<T> clazz, IDataProvider<T> provider, IKeyGenerator<T> keyGenerator) {
 		super();
+		this.clazz = clazz;
 		view = new ArrayList<>();
 		addedElements = new LinkedHashSet<>();
 		modifiedElements = new LinkedHashSet<>();
@@ -38,9 +45,7 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 	}
 
 	public void update(T originalElement) {
-		if (!addedElements.contains(originalElement)) {
-			modifiedElements.add(originalElement);
-		}
+		update(originalElement, originalElement);
 	}
 
 	public void update(T originalElement, T modifiedElement) {
@@ -174,5 +179,41 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 
 	public Collection<T> getRemovedElements() {
 		return Collections.unmodifiableCollection(removedElements);
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return new Iterator<T>() {
+
+			private int index = -1;
+			private final int size = size();
+
+			@Override
+			public boolean hasNext() {
+				return index + 1 < size;
+			}
+
+			@Override
+			public T next() {
+				index++;
+				return get(index);
+			}
+
+			@Override
+			public void remove() {
+				ContainerList.this.remove(index);
+			}
+		};
+	}
+
+	public void sort(Object[] propertyId, boolean[] ascending) {
+		try {
+			Comparator<T> comparator = new ReflectionComparator<T>(clazz, propertyId, ascending);
+			System.out.println(this);
+			Collections.sort(this, comparator);
+			System.out.println(this);
+		} catch (IntrospectionException e) {
+			StorableObjectLogger.errorMessage(ContainerList.class.getName(), e);
+		}
 	}
 }
