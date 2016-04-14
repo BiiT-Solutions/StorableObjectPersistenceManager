@@ -216,4 +216,12 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 			StorableObjectLogger.errorMessage(ContainerList.class.getName(), e);
 		}
 	}
+
+	public List<Object> getKeys() {
+		List<Object> keys = new ArrayList<>();
+		for (T element : view) {
+			keys.add(getKeyGenerator().generate(element));
+		}
+		return keys;
+	}
 }
