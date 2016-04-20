@@ -49,7 +49,8 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 	}
 
 	public void update(T originalElement, T modifiedElement) {
-		set(view.indexOf(originalElement), modifiedElement);
+		// Modify without triggering a delete operation.
+		view.set(view.indexOf(originalElement), modifiedElement);
 		if (addedElements.contains(originalElement)) {
 			addedElements.remove(originalElement);
 			addedElements.add(modifiedElement);
@@ -138,14 +139,24 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 
 	@Override
 	public void commit() {
-		for (T element : removedElements) {
-			provider.remove(element);
+		Iterator<T> removeItr = removedElements.iterator();
+		Iterator<T> updateItr = modifiedElements.iterator();
+		Iterator<T> addItr = addedElements.iterator();
+
+		while (removeItr.hasNext()) {
+			T next = removeItr.next();
+			provider.remove(next);
+			removeItr.remove();
 		}
-		for (T element : modifiedElements) {
-			provider.update(element);
+		while (updateItr.hasNext()) {
+			T next = updateItr.next();
+			provider.update(next);
+			updateItr.remove();
 		}
-		for (T element : addedElements) {
-			provider.add(element);
+		while (addItr.hasNext()) {
+			T next = addItr.next();
+			provider.add(next);
+			addItr.remove();
 		}
 	}
 
