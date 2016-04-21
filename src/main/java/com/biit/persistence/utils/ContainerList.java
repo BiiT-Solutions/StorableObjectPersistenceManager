@@ -209,9 +209,7 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 	public void sort(Object[] propertyId, boolean[] ascending) {
 		try {
 			Comparator<T> comparator = new ReflectionComparator<T>(clazz, propertyId, ascending);
-			System.out.println(this);
 			Collections.sort(this, comparator);
-			System.out.println(this);
 		} catch (IntrospectionException e) {
 			StorableObjectLogger.errorMessage(ContainerList.class.getName(), e);
 		}
