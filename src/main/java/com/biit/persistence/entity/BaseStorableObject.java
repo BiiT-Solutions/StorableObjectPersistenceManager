@@ -18,8 +18,9 @@ import com.biit.persistence.utils.IdGenerator;
 import com.biit.usermanager.entity.IUser;
 
 /**
- * Base StorableObject class. This class holds all the basic storable object information doesn't have the copy data
- * methods and thus doesn't require that it's child classes implement it. This base class is used as in the USMO
+ * Base StorableObject class. This class holds all the basic storable object
+ * information doesn't have the copy data methods and thus doesn't require that
+ * it's child classes implement it. This base class is used as in the USMO
  * project.
  *
  */
@@ -58,7 +59,7 @@ public abstract class BaseStorableObject implements Serializable {
 	private String comparationId;
 
 	public BaseStorableObject() {
-		creationTime = new java.sql.Timestamp(new java.util.Date().getTime());
+		setCreationTime(new java.sql.Timestamp(new java.util.Date().getTime()));
 		comparationId = IdGenerator.createId();
 	}
 
@@ -82,12 +83,12 @@ public abstract class BaseStorableObject implements Serializable {
 		if (creationTime != null) {
 			return creationTime;
 		} else {
-			creationTime = new java.sql.Timestamp(getRoundedMilliseconds(new Date()));
+			setCreationTime(new java.sql.Timestamp(getRoundedMilliseconds(new Date())));
 			return creationTime;
 		}
 	}
 
-	public void setUpdateTime() {		
+	public void setUpdateTime() {
 		setUpdateTime(new java.sql.Timestamp(new Date().getTime()));
 	}
 
