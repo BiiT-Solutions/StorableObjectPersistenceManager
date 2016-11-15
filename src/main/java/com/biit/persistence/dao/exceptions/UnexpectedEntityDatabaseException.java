@@ -1,9 +1,9 @@
 package com.biit.persistence.dao.exceptions;
 
-public class UnexpectedDatabaseException extends Exception {
+public class UnexpectedEntityDatabaseException extends Exception {
 	private static final long serialVersionUID = 8438018391045513212L;
 
-	public UnexpectedDatabaseException(String message, Exception originException) {
+	public UnexpectedEntityDatabaseException(String message, Exception originException) {
 		super(message, originException);
 	}
 }

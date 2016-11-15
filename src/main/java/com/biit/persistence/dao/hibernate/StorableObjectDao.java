@@ -7,7 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.biit.persistence.dao.IStorableObjectDao;
-import com.biit.persistence.dao.exceptions.UnexpectedDatabaseException;
+import com.biit.persistence.dao.exceptions.UnexpectedEntityDatabaseException;
 import com.biit.persistence.entity.StorableObject;
 
 public class StorableObjectDao<T> implements IStorableObjectDao {
@@ -37,7 +37,7 @@ public class StorableObjectDao<T> implements IStorableObjectDao {
 	}
 
 	@Override
-	public void deleteStorableObject(StorableObject entity) throws UnexpectedDatabaseException {
+	public void deleteStorableObject(StorableObject entity) throws UnexpectedEntityDatabaseException {
 		if (entity.getId() != null) {
 			Session session = getSessionFactory().getCurrentSession();
 			session.beginTransaction();
@@ -47,7 +47,7 @@ public class StorableObjectDao<T> implements IStorableObjectDao {
 				session.getTransaction().commit();
 			} catch (RuntimeException e) {
 				session.getTransaction().rollback();
-				throw new UnexpectedDatabaseException(e.getMessage(), e);
+				throw new UnexpectedEntityDatabaseException(e.getMessage(), e);
 			}
 		}
 	}

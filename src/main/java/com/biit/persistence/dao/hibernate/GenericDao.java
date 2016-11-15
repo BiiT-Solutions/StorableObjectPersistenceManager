@@ -12,7 +12,7 @@ import org.hibernate.transform.DistinctRootEntityResultTransformer;
 
 import com.biit.persistence.dao.IGenericDao;
 import com.biit.persistence.dao.exceptions.ElementCannotBePersistedException;
-import com.biit.persistence.dao.exceptions.UnexpectedDatabaseException;
+import com.biit.persistence.dao.exceptions.UnexpectedEntityDatabaseException;
 import com.biit.persistence.entity.StorableObject;
 import com.biit.persistence.entity.exceptions.ElementCannotBeRemovedException;
 
@@ -80,7 +80,7 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	}
 
 	@Override
-	public T makePersistent(T entity) throws UnexpectedDatabaseException, ElementCannotBePersistedException {
+	public T makePersistent(T entity) throws UnexpectedEntityDatabaseException, ElementCannotBePersistedException {
 		setCreationInfo(entity);
 		setUpdateInfo(entity);
 		Set<StorableObject> elementsWithNullIds = getElementsWithNullIds(entity);
@@ -95,12 +95,12 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			session.getTransaction().rollback();
 			// Reset the IDs if hibernate has put a value before rollback.
 			setNullIds(elementsWithNullIds);
-			throw new UnexpectedDatabaseException(e.getMessage(), e);
+			throw new UnexpectedEntityDatabaseException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public List<T> makePersistent(List<T> entities) throws UnexpectedDatabaseException {
+	public List<T> makePersistent(List<T> entities) throws UnexpectedEntityDatabaseException {
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		int objectsToStore = 0;
@@ -121,11 +121,11 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			return entities;
 		} catch (RuntimeException e) {
 			session.getTransaction().rollback();
-			throw new UnexpectedDatabaseException(e.getMessage(), e);
+			throw new UnexpectedEntityDatabaseException(e.getMessage(), e);
 		}
 	}
 
-	public void removeStorableObject(StorableObject entity) throws UnexpectedDatabaseException {
+	public void removeStorableObject(StorableObject entity) throws UnexpectedEntityDatabaseException {
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
@@ -134,12 +134,12 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			session.getTransaction().commit();
 		} catch (RuntimeException e) {
 			session.getTransaction().rollback();
-			throw new UnexpectedDatabaseException(e.getMessage(), e);
+			throw new UnexpectedEntityDatabaseException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public T read(Long id) throws UnexpectedDatabaseException {
+	public T read(Long id) throws UnexpectedEntityDatabaseException {
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
@@ -150,12 +150,12 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			return object;
 		} catch (RuntimeException e) {
 			session.getTransaction().rollback();
-			throw new UnexpectedDatabaseException(e.getMessage(), e);
+			throw new UnexpectedEntityDatabaseException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public int getRowCount() throws UnexpectedDatabaseException {
+	public int getRowCount() throws UnexpectedEntityDatabaseException {
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
@@ -166,12 +166,12 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			return rows;
 		} catch (RuntimeException e) {
 			session.getTransaction().rollback();
-			throw new UnexpectedDatabaseException(e.getMessage(), e);
+			throw new UnexpectedEntityDatabaseException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public List<T> getAll() throws UnexpectedDatabaseException {
+	public List<T> getAll() throws UnexpectedEntityDatabaseException {
 		Session session = getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		try {
@@ -189,17 +189,17 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 			return objects;
 		} catch (RuntimeException e) {
 			session.getTransaction().rollback();
-			throw new UnexpectedDatabaseException(e.getMessage(), e);
+			throw new UnexpectedEntityDatabaseException(e.getMessage(), e);
 		}
 	}
 
 	/**
 	 * Truncates the table.
 	 * 
-	 * @throws UnexpectedDatabaseException
+	 * @throws UnexpectedEntityDatabaseException
 	 */
 	@Override
-	public void removeAll() throws UnexpectedDatabaseException {
+	public void removeAll() throws UnexpectedEntityDatabaseException {
 		List<T> elements = getAll();
 		for (T element : elements) {
 			deleteStorableObject(element);
@@ -242,7 +242,7 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	}
 
 	@Override
-	public void makeTransient(T entity) throws UnexpectedDatabaseException, ElementCannotBeRemovedException {
+	public void makeTransient(T entity) throws UnexpectedEntityDatabaseException, ElementCannotBeRemovedException {
 		super.deleteStorableObject(entity);
 	}
 }
