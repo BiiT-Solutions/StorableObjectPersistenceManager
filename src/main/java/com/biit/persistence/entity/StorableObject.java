@@ -1,6 +1,5 @@
 package com.biit.persistence.entity;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -17,8 +16,7 @@ import com.biit.persistence.entity.exceptions.NotValidStorableObjectException;
  *
  */
 @Entity
-public abstract class StorableObject extends BaseStorableObject implements
-		Serializable {
+public abstract class StorableObject extends BaseStorableObject {
 	private static final long serialVersionUID = 1254938842002423347L;
 
 	protected StorableObject() {
@@ -49,11 +47,9 @@ public abstract class StorableObject extends BaseStorableObject implements
 	 * 
 	 * @param object
 	 */
-	public abstract void copyData(StorableObject object)
-			throws NotValidStorableObjectException;
+	public abstract void copyData(StorableObject object) throws NotValidStorableObjectException;
 
-	protected void copyBasicInfo(StorableObject object)
-			throws NotValidStorableObjectException {
+	protected void copyBasicInfo(StorableObject object) throws NotValidStorableObjectException {
 		setCreatedBy(object.getCreatedBy());
 		setUpdatedBy(object.getUpdatedBy());
 		setId(object.getId());
@@ -62,7 +58,7 @@ public abstract class StorableObject extends BaseStorableObject implements
 		setUpdateTime(object.getUpdateTime());
 	}
 
-	public void resetUserTimestampInfo(Long userId){
+	public void resetUserTimestampInfo(Long userId) {
 		setCreatedBy(userId);
 		setUpdatedBy(userId);
 		setCreationTime();
