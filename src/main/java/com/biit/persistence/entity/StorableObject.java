@@ -2,7 +2,7 @@ package com.biit.persistence.entity;
 
 import java.util.Set;
 
-import javax.persistence.Entity;
+import javax.persistence.MappedSuperclass;
 
 import com.biit.persistence.entity.exceptions.NotValidStorableObjectException;
 
@@ -15,7 +15,7 @@ import com.biit.persistence.entity.exceptions.NotValidStorableObjectException;
  * It also has a method for drools that probably should be removed.
  *
  */
-@Entity
+@MappedSuperclass
 public abstract class StorableObject extends BaseStorableObject {
 	private static final long serialVersionUID = 1254938842002423347L;
 
