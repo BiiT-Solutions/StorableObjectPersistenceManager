@@ -28,7 +28,11 @@ import com.biit.usermanager.entity.IUser;
  * project.
  *
  */
+// If marked as @MappedSuperclass, in database is added a auto_increment for all
+// subclass. But, the cache handler can handle this in their own cache region
+// and not in BaseStorable region
 @Entity
+// @Cacheable and @Cache not needed for caching if marked as @MappedSuperclass
 @Cacheable(true)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
