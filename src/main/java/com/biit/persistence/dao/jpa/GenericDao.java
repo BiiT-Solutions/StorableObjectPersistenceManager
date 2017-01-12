@@ -89,6 +89,7 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 		getEntityManager().getEntityManagerFactory().getCache().evictAll();
 	}
 	
+	@Override
 	public void evictCache() {
 		EntityManagerFactory factory = getEntityManager().getEntityManagerFactory();
 		Cache cache = factory.getCache();

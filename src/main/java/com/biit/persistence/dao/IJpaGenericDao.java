@@ -25,4 +25,6 @@ public interface IJpaGenericDao<EntityClass, PrimaryKeyClass extends Serializabl
 
 	EntityManager getEntityManager();
 
+	void evictCache();
+
 }
