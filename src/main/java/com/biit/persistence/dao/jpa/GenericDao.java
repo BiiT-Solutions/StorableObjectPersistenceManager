@@ -15,8 +15,7 @@ import javax.persistence.criteria.Root;
 import com.biit.persistence.dao.IJpaGenericDao;
 import com.biit.persistence.entity.exceptions.ElementCannotBeRemovedException;
 
-public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializable> implements
-		IJpaGenericDao<EntityClass, PrimaryKeyClass> {
+public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializable> implements IJpaGenericDao<EntityClass, PrimaryKeyClass> {
 
 	protected Class<EntityClass> entityClass;
 
@@ -34,12 +33,14 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 		}
 
 		getEntityManager().persist(entity);
-		// We force a flush due to in some cases a bidirectional relationships needs a @ManyToOne(optional = false) to
-		// perform an orphan removals. But without the flush, the optional causes an exception due to the element is set
+		// We force a flush due to in some cases a bidirectional relationships
+		// needs a @ManyToOne(optional = false) to
+		// perform an orphan removals. But without the flush, the optional
+		// causes an exception due to the element is set
 		// to null.
 		// http://stackoverflow.com/questions/3068817/hibernate-triggering-constraint-violations-using-orphanremoval
 		getEntityManager().flush();
-		
+
 		return entity;
 	}
 
@@ -88,12 +89,13 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 	public void evictAllCache() {
 		getEntityManager().getEntityManagerFactory().getCache().evictAll();
 	}
-	
+
 	@Override
 	public void evictCache() {
 		EntityManagerFactory factory = getEntityManager().getEntityManagerFactory();
 		Cache cache = factory.getCache();
 		cache.evict(getEntityClass());
+		getEntityManager().clear();
 	}
 
 	public Class<EntityClass> getEntityClass() {
