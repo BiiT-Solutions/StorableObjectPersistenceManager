@@ -26,12 +26,11 @@ import com.biit.usermanager.entity.IUser;
  */
 // If marked as @MappedSuperclass, in database is added a auto_increment for all
 // subclass. But, the cache handler can handle this in their own cache region
-// and not in BaseStorable region
+// and not in BaseStorable region. Marked as @MappedSuperclass disabled to errors in usmo-integration
 @MappedSuperclass
-//Cache disabled to errors in usmo-integration
 // @Cacheable and @Cache not needed for caching if marked as @MappedSuperclass
-//@Cacheable(true)
-//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+// @Cacheable(true)
+// @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class BaseStorableObject implements Serializable {
 	private static final long serialVersionUID = 1861734314986978986L;
