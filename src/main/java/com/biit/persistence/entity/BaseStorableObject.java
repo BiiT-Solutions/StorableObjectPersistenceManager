@@ -6,17 +6,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import javax.persistence.Cacheable;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import javax.persistence.MappedSuperclass;
 
 import com.biit.persistence.utils.IdGenerator;
 import com.biit.usermanager.entity.IUser;
@@ -31,11 +27,11 @@ import com.biit.usermanager.entity.IUser;
 // If marked as @MappedSuperclass, in database is added a auto_increment for all
 // subclass. But, the cache handler can handle this in their own cache region
 // and not in BaseStorable region
-@Entity
+@MappedSuperclass
 //Cache disabled to errors in usmo-integration
 // @Cacheable and @Cache not needed for caching if marked as @MappedSuperclass
-@Cacheable(true)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+//@Cacheable(true)
+//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class BaseStorableObject implements Serializable {
 	private static final long serialVersionUID = 1861734314986978986L;
