@@ -47,21 +47,22 @@ public abstract class BaseStorableObject implements Serializable {
 	// generation with <union-subclass> error.
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name="creation_time")
 	private Timestamp creationTime = null;
-	@Column(columnDefinition = "DOUBLE")
+	@Column(columnDefinition = "DOUBLE", name="created_by")
 	private Long createdBy = null;
+	@Column(name="update_time")
 	private Timestamp updateTime = null;
-	@Column(columnDefinition = "DOUBLE")
+	@Column(columnDefinition = "DOUBLE", name="update_by")
 	private Long updatedBy = null;
 
 	// A unique Id created with the object used to compare persisted objects and
 	// in memory objects.
 	// MySQL unique keys are limited to 767 bytes that in utf8mb4 are ~190.
-	@Column(unique = true, nullable = false, updatable = false, length = MAX_UNIQUE_COLUMN_LENGTH)
+	@Column(name="comparation_id",unique = true, nullable = false, updatable = false, length = MAX_UNIQUE_COLUMN_LENGTH)
 	private String comparationId;
 
 	public BaseStorableObject() {
