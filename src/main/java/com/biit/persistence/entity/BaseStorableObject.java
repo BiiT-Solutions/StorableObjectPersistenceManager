@@ -56,7 +56,7 @@ public abstract class BaseStorableObject implements Serializable {
 	private Long createdBy = null;
 	@Column(name="update_time")
 	private Timestamp updateTime = null;
-	@Column(columnDefinition = "DOUBLE", name="update_by")
+	@Column(columnDefinition = "DOUBLE", name="updated_by")
 	private Long updatedBy = null;
 
 	// A unique Id created with the object used to compare persisted objects and
