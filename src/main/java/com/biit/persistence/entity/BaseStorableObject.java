@@ -24,9 +24,10 @@ import com.biit.usermanager.entity.IUser;
  * project.
  *
  */
-// If marked as @MappedSuperclass, in database is added a auto_increment for all
-// subclass. But, the cache handler can handle this in their own cache region
-// and not in BaseStorable region. Marked as @MappedSuperclass disabled to errors in usmo-integration
+// If marked as @MappedSuperclass, in database is added an auto_increment for
+// all subclasses. But, the cache handler can handle this in their own cache
+// region and not in BaseStorable region. Marked as @MappedSuperclass disabled
+// to errors in usmo-integration
 @MappedSuperclass
 // @Cacheable and @Cache not needed for caching if marked as @MappedSuperclass
 // @Cacheable(true)
@@ -50,19 +51,19 @@ public abstract class BaseStorableObject implements Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
-	@Column(nullable = false, name="creation_time")
+	@Column(nullable = false, name = "creation_time")
 	private Timestamp creationTime = null;
-	@Column(columnDefinition = "DOUBLE", name="created_by")
+	@Column(columnDefinition = "DOUBLE", name = "created_by")
 	private Long createdBy = null;
-	@Column(name="update_time")
+	@Column(name = "update_time")
 	private Timestamp updateTime = null;
-	@Column(columnDefinition = "DOUBLE", name="updated_by")
+	@Column(columnDefinition = "DOUBLE", name = "updated_by")
 	private Long updatedBy = null;
 
 	// A unique Id created with the object used to compare persisted objects and
 	// in memory objects.
 	// MySQL unique keys are limited to 767 bytes that in utf8mb4 are ~190.
-	@Column(name="comparation_id",unique = true, nullable = false, updatable = false, length = MAX_UNIQUE_COLUMN_LENGTH)
+	@Column(name = "comparation_id", unique = true, nullable = false, updatable = false, length = MAX_UNIQUE_COLUMN_LENGTH)
 	private String comparationId;
 
 	public BaseStorableObject() {
