@@ -8,9 +8,9 @@ import org.hibernate.SessionFactory;
 
 import com.biit.persistence.dao.IStorableObjectDao;
 import com.biit.persistence.dao.exceptions.UnexpectedEntityDatabaseException;
-import com.biit.persistence.entity.StorableObject;
+import com.biit.persistence.entity.BaseStorableObject;
 
-public class StorableObjectDao<T> implements IStorableObjectDao {
+public class StorableObjectDao<T extends BaseStorableObject> implements IStorableObjectDao {
 
 	private SessionFactory sessionFactory = null;
 
@@ -25,19 +25,19 @@ public class StorableObjectDao<T> implements IStorableObjectDao {
 	}
 
 	protected void setCreationInfo(T entity) {
-		StorableObject storableObject = (StorableObject) entity;
+		BaseStorableObject storableObject = (BaseStorableObject) entity;
 		if (storableObject.getCreationTime() == null) {
 			storableObject.setCreationTime(new Timestamp(new Date().getTime()));
 		}
 	}
 
 	protected void setUpdateInfo(T entity) {
-		StorableObject treeObject = (StorableObject) entity;
+		BaseStorableObject treeObject = (BaseStorableObject) entity;
 		treeObject.setUpdateTime(new Timestamp(new Date().getTime()));
 	}
 
 	@Override
-	public void deleteStorableObject(StorableObject entity) throws UnexpectedEntityDatabaseException {
+	public void deleteStorableObject(BaseStorableObject entity) throws UnexpectedEntityDatabaseException {
 		if (entity.getId() != null) {
 			Session session = getSessionFactory().getCurrentSession();
 			session.beginTransaction();

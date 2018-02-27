@@ -3,7 +3,7 @@ package com.biit.persistence.dao;
 import org.hibernate.SessionFactory;
 
 import com.biit.persistence.dao.exceptions.UnexpectedEntityDatabaseException;
-import com.biit.persistence.entity.StorableObject;
+import com.biit.persistence.entity.BaseStorableObject;
 
 public interface IStorableObjectDao {
 
@@ -23,6 +23,6 @@ public interface IStorableObjectDao {
 	 * @param planningEvent
 	 * @throws UnexpectedEntityDatabaseException
 	 */
-	void deleteStorableObject(StorableObject entity) throws UnexpectedEntityDatabaseException;
+	void deleteStorableObject(BaseStorableObject entity) throws UnexpectedEntityDatabaseException;
 
 }
