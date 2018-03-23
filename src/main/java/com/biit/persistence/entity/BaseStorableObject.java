@@ -126,7 +126,7 @@ public abstract class BaseStorableObject implements Serializable {
 
 	public void setCreatedBy(IUser<Long> user) {
 		if (user != null) {
-			createdBy = user.getId();
+			createdBy = user.getUniqueId();
 		}
 	}
 
@@ -144,7 +144,7 @@ public abstract class BaseStorableObject implements Serializable {
 
 	public void setUpdatedBy(IUser<Long> user) {
 		if (user != null) {
-			updatedBy = user.getId();
+			updatedBy = user.getUniqueId();
 		}
 	}
 
