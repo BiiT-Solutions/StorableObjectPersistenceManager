@@ -50,15 +50,19 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 
 	public void update(T originalElement, T modifiedElement) {
 		// Modify without triggering a delete operation.
-		view.set(view.indexOf(originalElement), modifiedElement);
-		if (addedElements.contains(originalElement)) {
-			addedElements.remove(originalElement);
-			addedElements.add(modifiedElement);
-		} else {
-			if (modifiedElements.contains(originalElement)) {
-				modifiedElements.remove(originalElement);
+		try {
+			view.set(view.indexOf(originalElement), modifiedElement);
+			if (addedElements.contains(originalElement)) {
+				addedElements.remove(originalElement);
+				addedElements.add(modifiedElement);
+			} else {
+				if (modifiedElements.contains(originalElement)) {
+					modifiedElements.remove(originalElement);
+				}
+				modifiedElements.add(modifiedElement);
 			}
-			modifiedElements.add(modifiedElement);
+		} catch (ArrayIndexOutOfBoundsException aiob) {
+			//Not exists. Not update
 		}
 	}
 
