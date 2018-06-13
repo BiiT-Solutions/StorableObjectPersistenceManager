@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -20,7 +21,7 @@ public abstract class BaseStorableObjectDao<T extends BaseStorableObject, Primar
 	}
 
 	@Override
-	public T getByComparatorId(String comparationId) {
+	public T getByComparatorId(String comparationId) throws NoResultException {
 		// Get the criteria builder instance from entity manager
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(getEntityClass());
