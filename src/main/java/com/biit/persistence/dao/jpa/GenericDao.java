@@ -56,7 +56,9 @@ public abstract class GenericDao<EntityClass, PrimaryKeyClass extends Serializab
 
 	@Override
 	public void makeTransient(EntityClass entity) throws ElementCannotBeRemovedException {
-		getEntityManager().remove(getEntityManager().contains(entity) ? entity : getEntityManager().merge(entity));
+		if (entity != null) {
+			getEntityManager().remove(getEntityManager().contains(entity) ? entity : getEntityManager().merge(entity));
+		}
 	}
 
 	@Override

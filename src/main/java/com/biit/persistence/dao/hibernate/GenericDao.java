@@ -32,7 +32,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	}
 
 	/**
-	 * Get all elements that has a null value in the ID parameter before persisting.
+	 * Get all elements that has a null value in the ID parameter before
+	 * persisting.
 	 * 
 	 * @param entity
 	 * @return
@@ -53,7 +54,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 	}
 
 	/**
-	 * Get all elements that has a null value in the ID parameter before persisting.
+	 * Get all elements that has a null value in the ID parameter before
+	 * persisting.
 	 * 
 	 * @param entities
 	 * @return
@@ -208,8 +210,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 
 	/**
 	 * When using lazy loading, the sets must have a proxy to avoid a
-	 * "LazyInitializationException: failed to lazily initialize a collection of..." error. This procedure must be
-	 * called before closing the session.
+	 * "LazyInitializationException: failed to lazily initialize a collection of..."
+	 * error. This procedure must be called before closing the session.
 	 * 
 	 * @param planningEvent
 	 */
@@ -223,8 +225,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 
 	/**
 	 * When using lazy loading, the sets must have a proxy to avoid a
-	 * "LazyInitializationException: failed to lazily initialize a collection of..." error. This procedure must be
-	 * called before closing the session.
+	 * "LazyInitializationException: failed to lazily initialize a collection of..."
+	 * error. This procedure must be called before closing the session.
 	 * 
 	 * @param elements
 	 */
@@ -243,6 +245,8 @@ public abstract class GenericDao<T extends StorableObject> extends StorableObjec
 
 	@Override
 	public void makeTransient(T entity) throws UnexpectedEntityDatabaseException, ElementCannotBeRemovedException {
-		super.deleteStorableObject(entity);
+		if (entity != null) {
+			super.deleteStorableObject(entity);
+		}
 	}
 }
