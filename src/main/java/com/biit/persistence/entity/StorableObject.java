@@ -51,7 +51,7 @@ public abstract class StorableObject extends BaseStorableObject {
 		setUpdatedBy(object.getUpdatedBy());
 		setId(object.getId());
 		setComparationId(object.getComparationId());
-		setCreationTime(object.getCreationTime());
+		//setCreationTime(object.getCreationTime());
 		setUpdateTime(object.getUpdateTime());
 	}
 
