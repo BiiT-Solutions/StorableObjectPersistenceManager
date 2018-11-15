@@ -13,20 +13,26 @@ import javax.persistence.criteria.Root;
 import com.biit.persistence.dao.IJpaBaseStorableObjectDao;
 import com.biit.persistence.entity.BaseStorableObject;
 
-public abstract class BaseStorableObjectDao<T extends BaseStorableObject, PrimaryKeyClass extends Serializable> extends GenericDao<T, PrimaryKeyClass>
-		implements IJpaBaseStorableObjectDao<T, PrimaryKeyClass> {
+public abstract class BaseStorableObjectDao<EntityClass extends BaseStorableObject, PrimaryKeyClass extends Serializable> extends
+		GenericDao<EntityClass, PrimaryKeyClass> implements IJpaBaseStorableObjectDao<EntityClass, PrimaryKeyClass> {
 
-	public BaseStorableObjectDao(Class<T> type) {
+	public BaseStorableObjectDao(Class<EntityClass> type) {
 		super(type);
 	}
 
 	@Override
-	public T getByComparatorId(String comparationId) throws NoResultException {
+	public EntityClass merge(EntityClass entity) {
+		entity.setUpdateTime();
+		return super.merge(entity);
+	}
+
+	@Override
+	public EntityClass getByComparatorId(String comparationId) throws NoResultException {
 		// Get the criteria builder instance from entity manager
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(getEntityClass());
+		CriteriaQuery<EntityClass> criteriaQuery = criteriaBuilder.createQuery(getEntityClass());
 		// Tell to criteria query which tables/entities you want to fetch
-		Root<T> typesRoot = criteriaQuery.from(getEntityClass());
+		Root<EntityClass> typesRoot = criteriaQuery.from(getEntityClass());
 
 		List<Predicate> predicates = new ArrayList<Predicate>();
 		predicates.add(criteriaBuilder.equal(typesRoot.get("comparationId"), comparationId));
