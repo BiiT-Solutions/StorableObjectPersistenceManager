@@ -101,6 +101,9 @@ public abstract class BaseStorableObject implements Serializable {
 	}
 
 	private long getRoundedMilliseconds(Date date) {
+		if (date == null) {
+			return 0;
+		}
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(date);
 		calendar.set(Calendar.MILLISECOND, 0);
