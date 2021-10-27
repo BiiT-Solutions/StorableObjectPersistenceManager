@@ -12,3 +12,5 @@ tmp
 *.zip
 styles.css
 pom.xml.releaseBackup
+*.iml
+.idea

@@ -5,7 +5,7 @@
 	<groupId>com.biit</groupId>
 	<artifactId>storableobject-persistence-manager</artifactId>
 	<packaging>jar</packaging>
-	<version>0.4.12-SNAPSHOT</version>
+	<version>0.5.1-SNAPSHOT</version>
 	<name>Form Based Generic Persistence Manager</name>
 	<description>Basic functionality for persisting projects objects.</description>
 
@@ -40,22 +40,13 @@
 		<org.testng.version>6.8.7</org.testng.version>
 		<mysql-odbc.version>5.1.27</mysql-odbc.version>
 		<aspectj.version>1.8.2</aspectj.version>
-		<log4j.version>1.2.17</log4j.version>
-		<slf4j-api.version>1.7.7</slf4j-api.version>
-		<slf4j-log4j12.version>1.7.7</slf4j-log4j12.version>
 		<hibernate.version>5.2.17.Final</hibernate.version>
 		<project.scm.id>git</project.scm.id>
 		<!-- BiiT dependencies -->
-		<user-manager.version>[0.1,0.2)</user-manager.version>
+		<user-manager.version>[0.2,0.3)</user-manager.version>
 	</properties>
 
 	<dependencies>
-		<!-- log4j -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
 		<!-- aspect jrt -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
@@ -73,12 +64,6 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
-		</dependency>
-		<!-- Hibernate log -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j-log4j12.version}</version>
 		</dependency>
 		<!-- Testing -->
 		<dependency>
