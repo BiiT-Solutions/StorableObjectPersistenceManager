@@ -13,4 +13,6 @@ public interface IDataProvider<T> {
 	int size();
 
 	Collection<? extends T> get(int i, int size);
+
+	public T newEntity();
 }
