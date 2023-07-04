@@ -141,6 +141,7 @@ public abstract class BaseStorableObject implements Serializable {
         updateTime = new Timestamp(getRoundedMilliseconds(dateUpdated));
     }
 
+    @JsonSetter
     public void setUpdatedBy(Long updatedBy) {
         this.updatedBy = updatedBy;
     }
