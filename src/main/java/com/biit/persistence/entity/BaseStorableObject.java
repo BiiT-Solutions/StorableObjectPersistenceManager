@@ -2,6 +2,7 @@ package com.biit.persistence.entity;
 
 import com.biit.persistence.utils.IdGenerator;
 import com.biit.usermanager.entity.IUser;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -50,12 +51,17 @@ public abstract class BaseStorableObject implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(nullable = false, name = "creation_time")
     private Timestamp creationTime = null;
+
     @Column(columnDefinition = "DOUBLE", name = "created_by")
     private Long createdBy = null;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "update_time")
     private Timestamp updateTime = null;
+
     @Column(columnDefinition = "DOUBLE", name = "updated_by")
     private Long updatedBy = null;
 
