@@ -1,30 +1,29 @@
 package com.biit.persistence.dao;
 
+import com.biit.persistence.entity.exceptions.ElementCannotBeRemovedException;
+import jakarta.persistence.EntityManager;
+
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
-import com.biit.persistence.entity.exceptions.ElementCannotBeRemovedException;
-
 public interface IJpaGenericDao<EntityClass, PrimaryKeyClass extends Serializable> {
 
-	void makeTransient(EntityClass entity) throws ElementCannotBeRemovedException;
+    void makeTransient(EntityClass entity) throws ElementCannotBeRemovedException;
 
-	EntityClass makePersistent(EntityClass entity);
+    EntityClass makePersistent(EntityClass entity);
 
-	EntityClass merge(EntityClass entity);
+    EntityClass merge(EntityClass entity);
 
-	EntityClass get(PrimaryKeyClass id);
+    EntityClass get(PrimaryKeyClass id);
 
-	int getRowCount();
+    int getRowCount();
 
-	List<EntityClass> getAll();
+    List<EntityClass> getAll();
 
-	void evictAllCache();
+    void evictAllCache();
 
-	EntityManager getEntityManager();
+    EntityManager getEntityManager();
 
-	void evictCache();
+    void evictCache();
 
 }

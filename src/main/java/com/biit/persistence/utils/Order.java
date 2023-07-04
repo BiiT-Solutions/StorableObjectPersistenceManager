@@ -2,10 +2,8 @@ package com.biit.persistence.utils;
 
 public enum Order {
 
-	ASC,
+    ASC,
 
-	DES,
-
-	;
+    DES;
 
 }

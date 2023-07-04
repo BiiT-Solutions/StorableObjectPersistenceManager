@@ -1,5 +1,7 @@
 package com.biit.persistence.utils;
 
+import com.biit.persistence.logger.StorableObjectLogger;
+
 import java.beans.IntrospectionException;
 import java.io.Serializable;
 import java.util.AbstractList;
@@ -13,8 +15,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.biit.persistence.logger.StorableObjectLogger;
 
 public class ContainerList<T> extends AbstractList<T> implements Serializable, IIndexedList, IDataContainer {
     private static final long serialVersionUID = 7107564701510121074L;
@@ -68,7 +68,7 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 
     @Override
     public T set(int index, T element) {
-        T currentElement = view.set(index, element);
+        final T currentElement = view.set(index, element);
         if (currentElement != null) {
             removeElement(currentElement);
             addElement(currentElement);
@@ -99,7 +99,7 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
     @SuppressWarnings("unchecked")
     @Override
     public boolean remove(Object o) {
-        T elementToRemove = (T) o;
+        final T elementToRemove = (T) o;
         if (!view.remove(elementToRemove)) {
             return false;
         }
@@ -109,7 +109,7 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 
     @Override
     public T remove(int index) {
-        T elementToRemove = view.remove(index);
+        final T elementToRemove = view.remove(index);
         removeElement(elementToRemove);
         return elementToRemove;
     }
@@ -143,22 +143,22 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 
     @Override
     public void commit() {
-        Iterator<T> removeItr = removedElements.iterator();
-        Iterator<T> updateItr = modifiedElements.iterator();
-        Iterator<T> addItr = addedElements.iterator();
+        final Iterator<T> removeItr = removedElements.iterator();
+        final Iterator<T> updateItr = modifiedElements.iterator();
+        final Iterator<T> addItr = addedElements.iterator();
 
         while (removeItr.hasNext()) {
-            T next = removeItr.next();
+            final T next = removeItr.next();
             provider.remove(next);
             removeItr.remove();
         }
         while (updateItr.hasNext()) {
-            T next = updateItr.next();
+            final T next = updateItr.next();
             provider.update(next);
             updateItr.remove();
         }
         while (addItr.hasNext()) {
-            T next = addItr.next();
+            final T next = addItr.next();
             provider.add(next);
             addItr.remove();
         }
@@ -223,7 +223,7 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
 
     public void sort(Object[] propertyId, boolean[] ascending) {
         try {
-            Comparator<T> comparator = new ReflectionComparator<T>(clazz, propertyId, ascending);
+            final Comparator<T> comparator = new ReflectionComparator<T>(clazz, propertyId, ascending);
             Collections.sort(this, comparator);
         } catch (IntrospectionException e) {
             StorableObjectLogger.errorMessage(ContainerList.class.getName(), e);
@@ -231,7 +231,7 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
     }
 
     public List<Object> getKeys() {
-        List<Object> keys = new ArrayList<>();
+        final List<Object> keys = new ArrayList<>();
         for (T element : view) {
             keys.add(getKeyGenerator().generate(element));
         }
@@ -239,13 +239,13 @@ public class ContainerList<T> extends AbstractList<T> implements Serializable, I
     }
 
     public T addItem() {
-        T newItem = getProvider().newEntity();
+        final T newItem = getProvider().newEntity();
         add(newItem);
         return newItem;
     }
 
     public T addItemAt(int index) {
-        T newItem = getProvider().newEntity();
+        final T newItem = getProvider().newEntity();
         add(index, newItem);
         return newItem;
     }

@@ -10,307 +10,308 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public class LazyList<T> extends AbstractList<T> implements Serializable {
-	private static final long serialVersionUID = 7107564701510121074L;
+    private static final long serialVersionUID = 7107564701510121074L;
+    private static final int PAGE_SIZE = 3;
 
-	// Split into subinterfaces for better Java 8 lambda support
-	/**
-	 * Interface via the LazyList retrieves entities
-	 *
-	 * @param <T>
-	 *            The type of the objects in the list
-	 */
-	public interface PagingProvider<T> extends Serializable {
+    // Split into subinterfaces for better Java 8 lambda support
 
-		/**
-		 * Fetches entities from the backend.
-		 *
-		 * @param firstRow
-		 *            the index of first row that should be fetched
-		 * @param total
-		 *            is the number of rows that should be fetched.
-		 * @return a sub list from given first index
-		 */
-		public List<T> getEntities(int firstRow, int total);
-	}
+    /**
+     * Interface via the LazyList retrieves entities
+     *
+     * @param <T> The type of the objects in the list
+     */
+    public interface PagingProvider<T> extends Serializable {
 
-	/**
-	 * Interface via the LazyList retrieves entities with an order
-	 *
-	 * @param <T>
-	 */
-	public interface PagingOrderedProvider<T> extends Serializable {
+        /**
+         * Fetches entities from the backend.
+         *
+         * @param firstRow the index of first row that should be fetched
+         * @param total    is the number of rows that should be fetched.
+         * @return a sub list from given first index
+         */
+        List<T> getEntities(int firstRow, int total);
+    }
 
-		/**
-		 * Fetches entities form the backend ordered with property/order.
-		 *
-		 * @param firstRow
-		 *            the index of first row that should be fetched
-		 * @param total
-		 *            is the number of rows that should be fetched.
-		 * @return a sub list from given first index
-		 */
-		public List<T> getEntities(int firstRow, int total, String[] propertyNames, Order[] order);
+    /**
+     * Interface via the LazyList retrieves entities with an order
+     *
+     * @param <T>
+     */
+    public interface PagingOrderedProvider<T> extends Serializable {
 
-		/**
-		 * This method works the same way as a normal compare to returns -1, 0
-		 * or 1 if first is less than, equal or greater than
-		 * 
-		 * @param first
-		 * @param second
-		 * @return
-		 */
-		public int compare(T first, T second);
-	}
+        /**
+         * Fetches entities form the backend ordered with property/order.
+         *
+         * @param firstRow the index of first row that should be fetched
+         * @param total    is the number of rows that should be fetched.
+         * @return a sub list from given first index
+         */
+        List<T> getEntities(int firstRow, int total, String[] propertyNames, Order[] order);
 
-	/**
-	 * LazyList detects the size of the "simulated" list with via this
-	 * interface. Backend call is cached as COUNT queries in databases are
-	 * commonly heavy.
-	 */
-	public interface CountProvider extends Serializable {
+        /**
+         * This method works the same way as a normal compare to returns -1, 0
+         * or 1 if first is less than, equal or greater than
+         *
+         * @param first
+         * @param second
+         * @return
+         */
+        int compare(T first, T second);
+    }
 
-		/**
-		 * @return the count of entities listed in the LazyList
-		 */
-		public int size();
-	}
+    /**
+     * LazyList detects the size of the "simulated" list with via this
+     * interface. Backend call is cached as COUNT queries in databases are
+     * commonly heavy.
+     */
+    public interface CountProvider extends Serializable {
 
-	public interface EntityProvider<T> extends PagingProvider<T>, CountProvider {
-	}
+        /**
+         * @return the count of entities listed in the LazyList
+         */
+        int size();
+    }
 
-	public interface OrdedEntityProvider<T> extends EntityProvider<T>, PagingOrderedProvider<T> {
-	}
+    public interface EntityProvider<T> extends PagingProvider<T>, CountProvider {
+    }
 
-	public interface LazyListChanged<T> {
-		public void collectionChanged(LazyList<T> changedList);
-	}
+    public interface OrdedEntityProvider<T> extends EntityProvider<T>, PagingOrderedProvider<T> {
+    }
 
-	// Configuration params
-	protected final PagingOrderedProvider<T> pageOrderedProvider;
-	private final PagingProvider<T> pageProvider;
-	private final CountProvider countProvider;
-	private final int pageSize;
-	private final int maxPages;
+    public interface LazyListChanged<T> {
+        void collectionChanged(LazyList<T> changedList);
+    }
 
-	private List<LazyListPage<T>> cachedPages;
-	private final HashSet<T> cachedElements;
+    // Configuration params
+    private final PagingOrderedProvider<T> pageOrderedProvider;
+    private final PagingProvider<T> pageProvider;
+    private final CountProvider countProvider;
+    private final int pageSize;
+    private final int maxPages;
 
-	private int pageIndex = -1;
-	private Integer cachedSize;
+    private List<LazyListPage<T>> cachedPages;
+    private final HashSet<T> cachedElements;
 
-	private final List<LazyListChanged<T>> lazyListChangedListeners;
-	private transient WeakHashMap<T, Integer> indexCache;
-	private String[] propertyNames;
-	private Order[] order;
+    private int pageIndex = -1;
+    private Integer cachedSize;
 
-	public LazyList(PagingOrderedProvider<T> pageOrderedProvider, PagingProvider<T> pageProvider,
-			CountProvider countProvider, int pageSize, int maxPages) {
-		this.pageOrderedProvider = pageOrderedProvider;
-		this.pageProvider = pageProvider;
-		this.countProvider = countProvider;
-		this.pageSize = pageSize;
-		this.maxPages = maxPages;
+    private final List<LazyListChanged<T>> lazyListChangedListeners;
+    private transient WeakHashMap<T, Integer> indexCache;
+    private String[] propertyNames;
+    private Order[] order;
 
-		cachedPages = new ArrayList<>();
-		cachedElements = new HashSet<>();
-		lazyListChangedListeners = new ArrayList<>();
-	}
+    public LazyList(PagingOrderedProvider<T> pageOrderedProvider, PagingProvider<T> pageProvider,
+                    CountProvider countProvider, int pageSize, int maxPages) {
+        this.pageOrderedProvider = pageOrderedProvider;
+        this.pageProvider = pageProvider;
+        this.countProvider = countProvider;
+        this.pageSize = pageSize;
+        this.maxPages = maxPages;
 
-	public LazyList(EntityProvider<T> entityProvider, int pageSize, int maxPages) {
-		this(null, entityProvider, entityProvider, pageSize, maxPages);
-	}
+        cachedPages = new ArrayList<>();
+        cachedElements = new HashSet<>();
+        lazyListChangedListeners = new ArrayList<>();
+    }
 
-	public LazyList(OrdedEntityProvider<T> entityProvider, int pageSize, int maxPages) {
-		this(entityProvider, entityProvider, entityProvider, pageSize, maxPages);
-	}
+    public PagingOrderedProvider<T> getPageOrderedProvider() {
+        return pageOrderedProvider;
+    }
 
-	@Override
-	public T get(int index) {
-		if (index < 0 || index >= size()) {
-			throw new IndexOutOfBoundsException();
-		}
+    public LazyList(EntityProvider<T> entityProvider, int pageSize, int maxPages) {
+        this(null, entityProvider, entityProvider, pageSize, maxPages);
+    }
 
-		// Get pageIndex and index in the page
-		final int pageIndexForReqest = index / pageSize;
-		final int indexOnPage = index % pageSize;
+    public LazyList(OrdedEntityProvider<T> entityProvider, int pageSize, int maxPages) {
+        this(entityProvider, entityProvider, entityProvider, pageSize, maxPages);
+    }
 
-		// Find page from cache
-		LazyListPage<T> page = getPage(pageIndexForReqest);
+    @Override
+    public T get(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
+        }
 
-		if (page == null) {
-			page = loadPage(pageIndexForReqest);
-		}
-		final T get = page.get(indexOnPage);
-		return get;
-	}
+        // Get pageIndex and index in the page
+        final int pageIndexForReqest = index / pageSize;
+        final int indexOnPage = index % pageSize;
 
-	private LazyListPage<T> loadPage(int pageIndexForReqest) {
-		// Create a new page
-		LazyListPage<T> newPage = new LazyListPage<>(pageIndexForReqest, findEntities(pageIndexForReqest * pageSize));
-		cachedPages.add(newPage);
-		// Balance the cache if exceeded maxPage number
-		if (cachedPages.size() >= maxPages) {
-			int index = cachedPages.indexOf(newPage);
-			balanceCachePages(index);
-		}
-		return null;
-	}
+        // Find page from cache
+        LazyListPage<T> page = getPage(pageIndexForReqest);
 
-	private void balanceCachePages(int index) {
-		if (index < (maxPages / 2)) {
-			// remove last page
-			removeCachedElements(cachedPages.get(cachedPages.size() - 1));
-			cachedPages.remove(cachedPages.size() - 1);
-		} else {
-			removeCachedElements(cachedPages.get(0));
-			cachedPages.remove(0);
-		}
-	}
+        if (page == null) {
+            page = loadPage(pageIndexForReqest);
+        }
+        final T get = page.get(indexOnPage);
+        return get;
+    }
 
-	private LazyListPage<T> getPage(int pageIndexForReqest) {
-		// TODO optimize with binary search
-		for (LazyListPage<T> page : cachedPages) {
-			if (page.getPageNumber() == pageIndex) {
-				return page;
-			}
-		}
-		return null;
-	}
+    private LazyListPage<T> loadPage(int pageIndexForReqest) {
+        // Create a new page
+        final LazyListPage<T> newPage = new LazyListPage<>(pageIndexForReqest, findEntities(pageIndexForReqest * pageSize));
+        cachedPages.add(newPage);
+        // Balance the cache if exceeded maxPage number
+        if (cachedPages.size() >= maxPages) {
+            final int index = cachedPages.indexOf(newPage);
+            balanceCachePages(index);
+        }
+        return null;
+    }
 
-	private List<T> findEntities(int firstRow) {
-		List<T> page;
-		if (pageOrderedProvider == null) {
-			page = pageProvider.getEntities(firstRow, pageSize);
-		} else {
-			page = pageOrderedProvider.getEntities(firstRow, pageSize, propertyNames, order);
-		}
-		// Check that none of the elements in the page are already contained. If
-		// a element recovered is in the current cache that means that the
-		// collection in the database has changed
-		for (T entity : page) {
-			if (cachedElements.contains(entity)) {
-				// Database query result has changed. Clear cache and call the
-				// registered LazyListChanged listeners.
-				clearCache();
-				fireLazyListChangedListeners();
-			}
-		}
+    private void balanceCachePages(int index) {
+        if (index < (maxPages / 2)) {
+            // remove last page
+            removeCachedElements(cachedPages.get(cachedPages.size() - 1));
+            cachedPages.remove(cachedPages.size() - 1);
+        } else {
+            removeCachedElements(cachedPages.get(0));
+            cachedPages.remove(0);
+        }
+    }
 
-		// Now register the new entities
-		for (T entity : page) {
-			cachedElements.add(entity);
-		}
+    private LazyListPage<T> getPage(int pageIndexForReqest) {
+        // TODO optimize with binary search
+        for (LazyListPage<T> page : cachedPages) {
+            if (page.getPageNumber() == pageIndex) {
+                return page;
+            }
+        }
+        return null;
+    }
 
-		return page;
-	}
+    private List<T> findEntities(int firstRow) {
+        final List<T> page;
+        if (pageOrderedProvider == null) {
+            page = pageProvider.getEntities(firstRow, pageSize);
+        } else {
+            page = pageOrderedProvider.getEntities(firstRow, pageSize, propertyNames, order);
+        }
+        // Check that none of the elements in the page are already contained. If
+        // a element recovered is in the current cache that means that the
+        // collection in the database has changed
+        for (T entity : page) {
+            if (cachedElements.contains(entity)) {
+                // Database query result has changed. Clear cache and call the
+                // registered LazyListChanged listeners.
+                clearCache();
+                fireLazyListChangedListeners();
+            }
+        }
 
-	@Override
-	public int size() {
-		// If size is not cached, query database.
-		if (cachedSize == null) {
-			cachedSize = countProvider.size();
-		}
-		return cachedSize;
-	}
+        // Now register the new entities
+        for (T entity : page) {
+            cachedElements.add(entity);
+        }
 
-	private void removeCachedElements(LazyListPage<T> page) {
-		for (T element : page.getContent()) {
-			cachedElements.remove(element);
-			indexCache.remove(element);
-		}
-	}
+        return page;
+    }
 
-	public void clearCache() {
-		cachedPages.clear();
-		cachedElements.clear();
-		if (indexCache != null) {
-			indexCache.clear();
-		}
-	}
+    @Override
+    public int size() {
+        // If size is not cached, query database.
+        if (cachedSize == null) {
+            cachedSize = countProvider.size();
+        }
+        return cachedSize;
+    }
 
-	public void addLazyListChangedListener(LazyListChanged<T> listener) {
-		lazyListChangedListeners.add(listener);
-	}
+    private void removeCachedElements(LazyListPage<T> page) {
+        for (T element : page.getContent()) {
+            cachedElements.remove(element);
+            indexCache.remove(element);
+        }
+    }
 
-	public void removeLazyListChangedListener(LazyListChanged<T> listener) {
-		lazyListChangedListeners.remove(listener);
-	}
+    public void clearCache() {
+        cachedPages.clear();
+        cachedElements.clear();
+        if (indexCache != null) {
+            indexCache.clear();
+        }
+    }
 
-	private void fireLazyListChangedListeners() {
-		for (LazyListChanged<T> listener : lazyListChangedListeners) {
-			listener.collectionChanged(this);
-		}
-	}
+    public void addLazyListChangedListener(LazyListChanged<T> listener) {
+        lazyListChangedListeners.add(listener);
+    }
 
-	private Map<T, Integer> getIndexCache() {
-		if (indexCache == null) {
-			indexCache = new WeakHashMap<T, Integer>(pageSize * 3);
-		}
-		return indexCache;
-	}
+    public void removeLazyListChangedListener(LazyListChanged<T> listener) {
+        lazyListChangedListeners.remove(listener);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public int indexOf(Object o) {
-		// optimize: check the cached pages first
-		Integer indexViaCache = getIndexCache().get(o);
-		if (indexViaCache != null) {
-			return indexViaCache;
-		}
-		for (LazyListPage<T> page : cachedPages) {
-			int indexInPage = page.getContent().indexOf(o);
-			if (indexInPage != -1) {
-				indexViaCache = page.getPageNumber() * pageSize + indexInPage;
-				getIndexCache().put((T) o, indexViaCache);
-				return indexViaCache;
-			}
-		}
-		return super.indexOf(o);
-	}
+    private void fireLazyListChangedListeners() {
+        for (LazyListChanged<T> listener : lazyListChangedListeners) {
+            listener.collectionChanged(this);
+        }
+    }
 
-	@Override
-	public boolean contains(Object o) {
-		// Although there would be the indexed version, vaadin sometimes calls
-		// this. First check caches, then fall back to sluggish iterator :-(
-		for (LazyListPage<T> page : cachedPages) {
-			if (page.getContent().contains(o)) {
-				return true;
-			}
-		}
-		return super.contains(o);
-	}
+    private Map<T, Integer> getIndexCache() {
+        if (indexCache == null) {
+            indexCache = new WeakHashMap<>(pageSize * PAGE_SIZE);
+        }
+        return indexCache;
+    }
 
-	@Override
-	public Iterator<T> iterator() {
-		return new Iterator<T>() {
+    @SuppressWarnings("unchecked")
+    @Override
+    public int indexOf(Object o) {
+        // optimize: check the cached pages first
+        Integer indexViaCache = getIndexCache().get(o);
+        if (indexViaCache != null) {
+            return indexViaCache;
+        }
+        for (LazyListPage<T> page : cachedPages) {
+            final int indexInPage = page.getContent().indexOf(o);
+            if (indexInPage != -1) {
+                indexViaCache = page.getPageNumber() * pageSize + indexInPage;
+                getIndexCache().put((T) o, indexViaCache);
+                return indexViaCache;
+            }
+        }
+        return super.indexOf(o);
+    }
 
-			private int index = -1;
-			private final int size = size();
+    @Override
+    public boolean contains(Object o) {
+        // Although there would be the indexed version, vaadin sometimes calls
+        // this. First check caches, then fall back to sluggish iterator :-(
+        for (LazyListPage<T> page : cachedPages) {
+            if (page.getContent().contains(o)) {
+                return true;
+            }
+        }
+        return super.contains(o);
+    }
 
-			@Override
-			public boolean hasNext() {
-				return index + 1 < size;
-			}
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
 
-			@Override
-			public T next() {
-				index++;
-				return get(index);
-			}
+            private int index = -1;
+            private final int size = size();
 
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException("Not supported.");
-			}
-		};
-	}
+            @Override
+            public boolean hasNext() {
+                return index + 1 < size;
+            }
 
-	public void sort(String[] propertyNames, Order[] order) {
-		this.propertyNames = propertyNames;
-		this.order = order;
-		if (pageOrderedProvider != null) {
-			clearCache();
-			fireLazyListChangedListeners();
-		}
-	}
+            @Override
+            public T next() {
+                index++;
+                return get(index);
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Not supported.");
+            }
+        };
+    }
+
+    public void sort(String[] propertyNames, Order[] order) {
+        this.propertyNames = propertyNames;
+        this.order = order;
+        if (pageOrderedProvider != null) {
+            clearCache();
+            fireLazyListChangedListeners();
+        }
+    }
 }

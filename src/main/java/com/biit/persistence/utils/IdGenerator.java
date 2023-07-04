@@ -2,14 +2,14 @@ package com.biit.persistence.utils;
 
 import java.util.UUID;
 
-public class IdGenerator {
+public final class IdGenerator {
 
-	private IdGenerator() {
-		// Private constructor to hide the implicit public one.
-	}
+    private IdGenerator() {
+        // Private constructor to hide the implicit public one.
+    }
 
-	public static String createId() {
-		UUID uuid = java.util.UUID.randomUUID();
-		return uuid.toString();
-	}
+    public static String createId() {
+        final UUID uuid = java.util.UUID.randomUUID();
+        return uuid.toString();
+    }
 }

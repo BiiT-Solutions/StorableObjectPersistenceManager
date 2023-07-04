@@ -2,6 +2,6 @@ package com.biit.persistence.utils;
 
 public interface IIndexedList {
 
-	Object getByKey(Object key);
+    Object getByKey(Object key);
 
 }
