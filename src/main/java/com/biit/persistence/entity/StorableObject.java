@@ -54,9 +54,13 @@ public abstract class StorableObject extends BaseStorableObject {
         setUpdateTime(object.getUpdateTime());
     }
 
+    /**
+     * For testing purposes, we remove the variable data.
+     */
     public void resetUserTimestampInfo() {
         setCreationTime(null);
         setUpdateTime(null);
+        setComparationId(null);
     }
 
     public void resetUserTimestampInfo(Long userId) {
