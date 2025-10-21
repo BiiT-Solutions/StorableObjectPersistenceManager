@@ -5,7 +5,7 @@
     <groupId>com.biit-solutions</groupId>
     <artifactId>storableobject-persistence-manager</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.56</version>
+    <version>1.1.57-SNAPSHOT</version>
     <name>Form Based Generic Persistence Manager</name>
     <description>Basic functionality for persisting projects objects.</description>
 
@@ -47,7 +47,7 @@
         <connection>scm:git:ssh://git@github.com/BiiT-Solutions/StorableObjectPersistenceManager.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/BiiT-Solutions/StorableObjectPersistenceManager.git</developerConnection>
         <url>https://github.com/BiiT-Solutions/StorableObjectPersistenceManager.git</url>
-        <tag>storableobject-persistence-manager-1.1.56</tag>
+        <tag>storableobject-persistence-manager</tag>
     </scm>
 
     <dependencies>
